@@ -2,32 +2,51 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
+@layer base {
+  html {
+    @apply bg-light dark:bg-dark text-dark dark:text-light  box-border p-0 m-0;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+  h1 {
+    @apply text-5xl cursor-none pointer-events-none;
+  }
+
+  h2 {
+    @apply text-2xl;
+  }
+
+  a:hover {
+    @apply underline;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
+@layer components {
+  .home {
+    @apply grid w-screen h-screen;
+    grid-template:
+      "a . b . c" 25%
+      "d d d d c" auto
+      "d d d d c" auto
+      "e e e e e" 20% / auto 1fr auto 1fr auto;
+  }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .home > section:nth-child(1) {
+    grid-area: a;
+  }
+
+  .home > section:nth-child(2) {
+    grid-area: b;
+  }
+
+  .home > section:nth-child(3) {
+    grid-area: c;
+  }
+
+  .home > section:nth-child(4) {
+    grid-area: d;
+  }
+
+  .home > section:nth-child(5) {
+    grid-area: e;
   }
 }
