@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
-import { Cormorant_Unicase } from "next/font/google";
+import { Cormorant_Unicase, Cormorant } from "next/font/google";
 import "./globals.css";
 
-const font = Cormorant_Unicase({
-  weight: ["400", "700"],
+const cormorant = Cormorant({
+  weight: "300",
   subsets: ["latin"],
-  variable: "--cormorant",
+  variable: "--corm",
+});
+
+const cormorant_unicase = Cormorant_Unicase({
+  weight: "300",
+  subsets: ["latin"],
+  variable: "--corm-uni",
 });
 
 export const metadata: Metadata = {
@@ -19,8 +25,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={font.className}>{children}</body>
+    <html
+      className={`${cormorant_unicase.className} ${cormorant.variable}`}
+      lang="en"
+    >
+      <body>{children}</body>
     </html>
   );
 }

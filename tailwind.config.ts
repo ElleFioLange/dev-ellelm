@@ -10,6 +10,10 @@ const config: Config = {
   theme: {
     extend: {
       colors,
+      fontFamily: {
+        corm: ["var(--corm)"],
+        "corm-uni": ["var(--corm-uni)"],
+      },
     },
   },
   plugins: [],

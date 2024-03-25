@@ -33,7 +33,7 @@ export default function Home() {
   };
 
   return (
-    <main className="home p-4">
+    <main className="home-grid gap-1 w-screen h-screen max-w-screen max-h-screen overflow-hidden p-8">
       <section>
         <h1>I'm a</h1>
         <Option name="Developer" />
@@ -52,6 +52,7 @@ export default function Home() {
         <h1>who knows</h1>
         <Option name="Javascript" />
         <Option name="Typescript" />
+        <Option name="Python" />
         <Option name="CSS" />
         <Option name="Tailwind" />
         <Option name="React" />
@@ -61,18 +62,19 @@ export default function Home() {
         <Option name="Transformers" />
         <Option name="Langchain" />
         <Option name="RAG LLMs" />
+        <Option name="Vector Databases" />
       </section>
 
-      <section>
-        <ElleLM selected={selected} handleChange={handleChange} />
-      </section>
+      <ElleLM selected={selected} handleChange={handleChange} />
 
       <section className="place-self-end">
-        <h2 className="text-right leading-5">
-          <span className="mr-2">Elle</span>
+        <h2 className="text-right leading-5 mb-12">
+          <span className="mr-2 leading-5">Elle</span>
           <br />
           Fiorentino-Lange
         </h2>
+      </section>
+      <nav>
         <ul className="flex flex-row-reverse gap-12 text-lg">
           <li>
             <Link href="#">Home</Link>
@@ -84,7 +86,7 @@ export default function Home() {
             <Link href="#">Portfolio</Link>
           </li>
         </ul>
-      </section>
+      </nav>
     </main>
   );
 }
