@@ -33,9 +33,16 @@ export default function ElleLM({
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-      result += new TextDecoder().decode(value);
+      const text = new TextDecoder().decode(value);
+      const add = document.createElement("span");
+      add.innerText = text;
+      add.className = "animate-stream";
+      ref.current?.appendChild(add);
+      result += text;
       setText(result);
-      ref.current?.scrollTo(0, ref.current.scrollHeight);
+      ref.current?.scrollTo({
+        top: ref.current.scrollHeight,
+      });
     }
   };
 
@@ -67,10 +74,10 @@ export default function ElleLM({
       </div>
 
       <p
-        className="font-corm ml-2 whitespace-pre-wrap overflow-auto h-full"
+        className="font-corm ml-2 pr-2 whitespace-pre-wrap overflow-auto h-full"
         ref={ref}
       >
-        {displayText}
+        {/* {displayText} */}
       </p>
     </section>
   );

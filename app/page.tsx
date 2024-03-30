@@ -68,7 +68,7 @@ export default function Home() {
       <ElleLM selected={selected} handleChange={handleChange} />
 
       <section className="place-self-end">
-        <h2 className="text-right leading-5 mb-12">
+        <h2 className="text-right leading-5 mb-8">
           <span className="mr-2 leading-5">Elle</span>
           <br />
           Fiorentino-Lange
@@ -84,6 +84,9 @@ export default function Home() {
           </li>
           <li>
             <Link href="#">Portfolio</Link>
+          </li>
+          <li>
+            <Link href="#">Blog</Link>
           </li>
         </ul>
       </nav>

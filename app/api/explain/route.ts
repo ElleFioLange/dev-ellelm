@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import keywords from "@/utils/constants/keywords";
+import keywords from "@/utils/keywords";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 
 export type Req = {
