@@ -1,6 +1,5 @@
 import { useMemo, useRef, useState } from "react";
-import Image from "next/image";
-import Loading from "./Loading";
+import Loading from "@/app/components/Loading";
 
 export default function ElleLM({
   selected,

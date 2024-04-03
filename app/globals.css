@@ -11,7 +11,13 @@
     --eggplant: #502536;
 
     /* TODO Fix scroll bar for light and dark mode */
-    scrollbar-color: var(--light) var(--dark);
+    scrollbar-color: var(--dark) var(--light);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    html {
+      scrollbar-color: var(--light) var(--dark);
+    }
   }
 
   h1 {
@@ -84,17 +90,16 @@
   .ellelm-grid > p:nth-child(4) {
     grid-area: d;
   }
+}
 
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+@layer utilities {
+  /* Safari */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 
-  .animate-stream {
-    animation: fade-in 1s ease-in-out;
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;
   }
 }

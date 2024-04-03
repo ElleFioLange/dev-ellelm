@@ -5,13 +5,12 @@ import "./globals.css";
 const cormorant = Cormorant({
   weight: "300",
   subsets: ["latin"],
-  variable: "--corm",
+  variable: "--cormorant",
 });
 
 const cormorant_unicase = Cormorant_Unicase({
   weight: "300",
   subsets: ["latin"],
-  variable: "--corm-uni",
 });
 
 export const metadata: Metadata = {
