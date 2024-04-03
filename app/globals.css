@@ -9,8 +9,8 @@
     --dark: #20222e;
     --red: #dd2c4c;
     --eggplant: #502536;
+    --salmon: #ec93a0;
 
-    /* TODO Fix scroll bar for light and dark mode */
     scrollbar-color: var(--dark) var(--light);
   }
 
@@ -101,5 +101,21 @@
   .no-scrollbar {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none;
+  }
+
+  .drop-shadow {
+    /* prettier-ignore */
+    filter: drop-shadow(0 20px 13px var(--dark)08)
+    /* prettier-ignore */
+      drop-shadow(0 8px 5px var(--dark)24);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .drop-shadow {
+      /* prettier-ignore */
+      filter: drop-shadow(0 20px 13px var(--light)08)
+      /* prettier-ignore */
+        drop-shadow(0 8px 5px var(--light)24);
+    }
   }
 }
