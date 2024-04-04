@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.20.1",
     "@gsap/react": "^2.1.0",
     "ai": "^3.0.13",
     "gsap": "^3.12.5",
