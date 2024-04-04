@@ -4,13 +4,16 @@ import { useEffect, useRef } from "react";
 
 export default function Loading({
   duration,
+  resetDuration,
   delay,
   onLoad,
   className,
   reset,
 }: {
   duration: number;
-  // Delay default is 1.5s
+  // Default is 0.5s
+  resetDuration?: number;
+  // Default is 1.5s
   delay?: number;
   onLoad: () => void;
   className?: string;
@@ -20,13 +23,31 @@ export default function Loading({
 
   useGSAP(
     () => {
-      gsap.to(loader.current, {
-        duration,
-        delay: delay || 1.5,
-        width: "100%",
-      });
+      const _resetDuration = resetDuration !== undefined ? resetDuration : 0.5;
+      const _delay = delay !== undefined ? delay : 1.5;
+
+      const _width = loader.current?.offsetWidth;
+
+      if (_width) {
+        gsap.killTweensOf(loader.current);
+        gsap.to(loader.current, {
+          duration: _resetDuration,
+          width: "0%",
+        });
+        gsap.to(loader.current, {
+          duration,
+          delay: _delay + _resetDuration,
+          width: "100%",
+        });
+      } else {
+        gsap.to(loader.current, {
+          duration,
+          delay: _delay,
+          width: "100%",
+        });
+      }
     },
-    { dependencies: [reset], revertOnUpdate: true }
+    { dependencies: [reset] }
   );
 
   useEffect(() => {
