@@ -4,19 +4,43 @@
 
 @layer base {
   html {
-    @apply bg-light dark:bg-dark text-dark dark:text-light  box-border p-0 m-0 select-none;
-    --light: #fbf9f4;
-    --dark: #20222e;
-    --red: #dd2c4c;
-    --eggplant: #502536;
-    --salmon: #ec93a0;
+    --light: 251 249 244;
+    --dark: 32 34 46;
 
-    scrollbar-color: var(--dark) var(--light);
+    --alabaster: 210 218 207;
+    --sage: 100 180 105;
+    --cave: 101 111 108;
+
+    --red: 221 44 76;
+    /* --eggplant: 56 38 45;
+    --rose: 244 198 202; */
+    /* Foreground */
+    --fg: var(--dark);
+    /* Background */
+    --bg: var(--light);
+    /* Accents */
+    --accent-fg: var(--alabaster);
+    --accent-mid: var(--sage);
+    --accent-bg: var(--cave);
+
+    scrollbar-color: rgb(var(--fg)) #00000000;
+
+    @apply bg-bg text-fg box-border p-0 m-0 select-none;
+  }
+
+  * {
+    scrollbar-color: inherit;
   }
 
   @media (prefers-color-scheme: dark) {
     html {
-      scrollbar-color: var(--light) var(--dark);
+      /* Foreground */
+      --fg: var(--light);
+      /* Background */
+      --bg: var(--dark);
+      /* Accents */
+      --accent-fg: var(--cave);
+      --accent-bg: var(--alabaster);
     }
   }
 
@@ -117,5 +141,9 @@
       /* prettier-ignore */
         drop-shadow(0 8px 5px var(--light)24);
     }
+  }
+
+  .c-invert {
+    @apply bg-fg text-bg;
   }
 }
