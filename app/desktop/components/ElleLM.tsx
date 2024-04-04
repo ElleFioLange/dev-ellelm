@@ -1,14 +1,16 @@
-import { useMemo, useRef, useState } from "react";
+import { Dispatch, useMemo, useRef, useState } from "react";
 import Loading from "@/app/components/Loading";
 
 export default function ElleLM({
   selected,
-  handleChange,
+  handleRemove,
+  reset,
 }: {
   selected: Array<string>;
-  handleChange: (args: { change: "remove"; name: string }) => void;
+  handleRemove: (name: string) => void;
+  reset: [never[], Dispatch<never[]>];
 }) {
-  const [text, setText] = useState("");
+  const text = useState("");
 
   const displayText = useMemo(() => {
     if (text) return text;
@@ -18,60 +20,63 @@ export default function ElleLM({
 
   const ref = useRef<HTMLParagraphElement>(null);
 
-  const handleExplain = async () => {
-    const response = await fetch("/api/explain", {
-      method: "POST",
-      body: JSON.stringify({ selected }),
-    });
-
-    const reader = response.body?.getReader();
-
-    if (!reader) return;
-
-    let result = "";
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      const text = new TextDecoder().decode(value);
-      const add = document.createElement("span");
-      add.innerText = text;
-      add.className = "animate-stream";
-      ref.current?.appendChild(add);
-      result += text;
-      setText(result);
-      ref.current?.scrollTo({
-        top: ref.current.scrollHeight,
+  const handleExplain =
+    // Uncomment to disable GPT inference
+    // () => {};
+    async () => {
+      const response = await fetch("/api/explain", {
+        method: "POST",
+        body: JSON.stringify({ selected }),
       });
-    }
-  };
+
+      const reader = response.body?.getReader();
+
+      if (!reader) return;
+
+      let result = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const _text = new TextDecoder().decode(value);
+        const add = document.createElement("span");
+        add.innerText = _text;
+        add.className = "animate-stream";
+        ref.current?.appendChild(add);
+        result += _text;
+        text[1](result);
+        ref.current?.scrollTo({
+          top: ref.current.scrollHeight,
+        });
+      }
+    };
 
   return (
     <section className="ellelm-grid">
       <h1 className={selected.length ? "" : " opacity-30"}>Tell me about </h1>
 
-      {selected.length ? (
-        <Loading
-          duration={3}
-          onLoad={handleExplain}
-          reset={selected}
-          className="col-span-2"
-        />
-      ) : (
-        <div className="h-0.5 rounded-full bg-dark/30 dark:bg-light/30" />
-      )}
+      <Loading
+        duration={3}
+        delay={1.5}
+        resetDuration={0.5}
+        onLoad={handleExplain}
+        reset={reset}
+        className="col-span-2"
+        paused={!selected.length}
+      />
 
       <div>
         {selected.map((name) => (
           <button
             key={name}
             className="text-lg cursor-pointer block hover:text-red"
-            onClick={() => handleChange({ change: "remove", name })}
+            onClick={() => handleRemove(name)}
           >
             {name}
           </button>
         ))}
       </div>
 
+      {/* TODO Make previous text viewable after close */}
       <p
         className="font-corm ml-2 pr-2 whitespace-pre-wrap overflow-auto h-full"
         ref={ref}

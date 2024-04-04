@@ -5,14 +5,20 @@ import ElleLM from "./components/ElleLM";
 import { useState } from "react";
 
 export default function Home() {
-  const [selected, setSelected] = useState<Array<string>>([]);
+  const selected = useState<Array<string>>([]);
+
+  const reset = useState([]);
 
   const Option = ({ name }: { name: string }) => {
-    const isSelected = selected.includes(name);
+    const isSelected = selected[0].includes(name);
     return (
       <button
         className={"text-lg ml-1 block" + (isSelected ? " opacity-30" : "")}
-        onClick={() => setSelected([...selected, name])}
+        onClick={() => {
+          if (isSelected) handleRemove(name);
+          else selected[1]([...selected[0], name]);
+          reset[1]([]);
+        }}
         disabled={isSelected}
       >
         {name}
@@ -20,16 +26,9 @@ export default function Home() {
     );
   };
 
-  const handleChange = ({
-    change,
-    name,
-  }: {
-    change: "remove";
-    name: string;
-  }) => {
-    if (change === "remove") {
-      setSelected(selected.filter((option) => option !== name));
-    }
+  const handleRemove = (name: string) => {
+    selected[1](selected[0].filter((option) => option !== name));
+    reset[1]([]);
   };
 
   return (
@@ -65,7 +64,11 @@ export default function Home() {
         <Option name="Vector Databases" />
       </section>
 
-      <ElleLM selected={selected} handleChange={handleChange} />
+      <ElleLM
+        selected={selected[0]}
+        reset={reset}
+        handleRemove={handleRemove}
+      />
 
       <section className="place-self-end">
         <h2 className="text-right leading-5 mb-8">

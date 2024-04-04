@@ -15,59 +15,25 @@ export type State =
 
 export default function Home() {
   const loadingAnim = useState(true);
-  const selected = useState<Array<string>>([
-    // "option",
-    // "option",
-    // "option",
-    // "option",
-    // "option",
-  ]);
+  const selected = useState<Array<string>>([]);
   const state = useState<State>(0);
 
   const reset = useState([]);
-
-  useEffect(() => reset[1]([]), []);
 
   useEffect(() => {
     setTimeout(() => loadingAnim[1](false), 1500);
   }, []);
 
   const Option = ({ name }: { name: string }) => {
-    const scale = useState<number>(1);
-    const highlight = useState<number>(0);
-
-    const ref = useRef<HTMLButtonElement>(null);
-
-    useEffect(() => {
-      const scrollPos = ref.current?.getBoundingClientRect().top;
-      const windowHeight = window.innerHeight;
-      const centerPos = windowHeight / 2;
-      if (scrollPos) {
-        const centerDist = Math.abs(scrollPos - centerPos) / windowHeight;
-        const scaleX = centerDist * 8;
-        const highlightX = centerDist * 12;
-        const _scale = scaleX >= Math.PI ? 0 : (Math.cos(scaleX) + 1) / 8;
-        const _highlight =
-          highlightX >= Math.PI ? 0 : (Math.cos(highlightX) + 1) / 2;
-        scale[1](_scale + 1);
-        highlight[1](_highlight);
-      }
-    }, [reset[0]]);
-
     const isSelected = selected[0].includes(name);
     return (
       <button
-        ref={ref}
         className={
           "text-2xl mt-16 block relative whitespace-nowrap w-full text-center" +
           (isSelected ? " text-accent-mid bg-accent-mid/10" : "")
         }
-        // style={{
-        //   scale: scale[0],
-        //   color: `#${interpolateColor(fade.accent, fade.base, highlight[0])}`,
-        // }}
         onClick={() => {
-          if (isSelected) handleRemove({ name });
+          if (isSelected) handleRemove(name);
           else selected[1]([...selected[0], name]);
           reset[1]([]);
         }}
@@ -77,7 +43,7 @@ export default function Home() {
     );
   };
 
-  const handleRemove = ({ name }: { name: string }) => {
+  const handleRemove = (name: string) => {
     selected[1](selected[0].filter((option) => option !== name));
     reset[1]([]);
   };

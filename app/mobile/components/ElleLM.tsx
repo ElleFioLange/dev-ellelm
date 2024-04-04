@@ -9,7 +9,7 @@ export default function ElleLM({
   state,
 }: {
   selected: Array<string>;
-  handleRemove: (args: { name: string }) => void;
+  handleRemove: (name: string) => void;
   // Used to reset the Loading component
   reset: [never[], Dispatch<never[]>];
   state: [State, Dispatch<State>];
@@ -207,7 +207,7 @@ export default function ElleLM({
                     transform: `translate(${left}, ${top})`,
                   }}
                   onClick={() =>
-                    selState[0] === 2 ? handleRemove({ name }) : selState[1](2)
+                    selState[0] === 2 ? handleRemove(name) : selState[1](2)
                   }
                   className="inline-block text-2xl cursor-pointer whitespace-nowrap transition-all ease-in-out duration-500"
                   // onClick={() => handleChange({ change: "remove", name })}
