@@ -25,11 +25,7 @@
 
     scrollbar-color: rgb(var(--fg)) #00000000;
 
-    @apply bg-bg text-fg box-border p-0 m-0 select-none;
-  }
-
-  * {
-    scrollbar-color: inherit;
+    @apply bg-bg text-fg box-border h-full p-0 m-0 select-none;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -42,6 +38,10 @@
       --accent-fg: var(--cave);
       --accent-bg: var(--alabaster);
     }
+  }
+
+  body {
+    @apply bg-bg;
   }
 
   h1 {

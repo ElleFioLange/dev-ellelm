@@ -1,7 +1,6 @@
 import { Dispatch, useEffect, useMemo, useRef, useState } from "react";
 import Loading from "../../components/Loading";
 import { State } from "../page";
-import { useGSAP } from "@gsap/react";
 
 export default function ElleLM({
   selected,
@@ -11,9 +10,8 @@ export default function ElleLM({
 }: {
   selected: Array<string>;
   handleRemove: (args: { name: string }) => void;
-  // TODO Add tracking for previously explained terms to prevent re-explaining
   // Used to reset the Loading component
-  reset: never[];
+  reset: [never[], Dispatch<never[]>];
   state: [State, Dispatch<State>];
 }) {
   // TODO Store text
@@ -25,6 +23,7 @@ export default function ElleLM({
     | 1 // Preview
     | 2 // Open
   >(0);
+  const prevExplained = useState<string[]>([]);
 
   const ref = useRef<HTMLParagraphElement>(null);
 
@@ -36,101 +35,44 @@ export default function ElleLM({
     }
   }, [selected]);
 
-  // const Selection = ({ name, i }: { name: string; i: number }) => {
-  //   const pos = useMemo(() => selPos[0][name] || ["0px", "0px"], [selPos]);
-
-  //   const ref = useRef<HTMLSpanElement>(null);
-
-  //   useGSAP(() => {
-  //     let left = "0px";
-  //     let top = "0px";
-
-  //     if (selState[0] === 2) {
-  //       const elm = ref.current;
-  //       const x = elm?.offsetLeft;
-  //       const w = elm?.offsetWidth;
-  //       const c = window.innerWidth / 2;
-
-  //       const _left = x && w && c ? c - x - w / 2 : 0;
-
-  //       // Accodomodate padding and margin of containers
-  //       const m = parseInt(getComputedStyle(document.documentElement).fontSize);
-
-  //       left = `${_left - m}px`;
-
-  //       // if (pos[0][1] !== "0px") top = pos[0][1];
-  //       top = `${(i * 4 + 1) * m}px`;
-  //     }
-
-  //     if (JSON.stringify(pos) !== JSON.stringify([left, top]))
-  //       selPos[1]({ ...selPos[0], [name]: [left, top] });
-
-  //     gsap.to(ref.current, {});
-  //   }, [i, selState[0]]);
-
-  //   console.log("pos", pos);
-
-  //   return (
-  //     <span
-  //       // key={name}
-  //       ref={ref}
-  //       onClick={() =>
-  //         selState[0] === 2 ? handleRemove({ name }) : selState[1](2)
-  //       }
-  //       className="inline-block relative text-2xl cursor-pointer whitespace-nowrap transition-all ease-in-out duration-500"
-  //       // onClick={() => handleChange({ change: "remove", name })}
-  //     >
-  //       {name}
-  //       {/* <span
-  //         className={
-  //           "text-red text-lg absolute -right-2 -top-1 transition-all duration-500 ease-in-out" +
-  //           (selState[0] === 2 ? " opacity-1" : " opacity-0")
-  //         }
-  //       >
-  //         x
-  //       </span> */}
-  //     </span>
-  //   );
-  // };
-
   // TODO Use Claude
   const handleExplain =
     // Uncomment to disable GPT inference
-    () => {};
-  async () => {
-    const response = await fetch("/api/explain", {
-      method: "POST",
-      body: JSON.stringify({ selected }),
-    });
+    // () => {};
+    async () => {
+      const response = await fetch("/api/explain", {
+        method: "POST",
+        body: JSON.stringify({ selected }),
+      });
 
-    selState[1](0); // Closed
-    state[1](1); // Streaming
+      selState[1](0); // Closed
+      state[1](1); // Streaming
 
-    const _reader = response.body?.getReader();
+      const _reader = response.body?.getReader();
 
-    if (!_reader) return;
+      if (!_reader) return;
 
-    reader[1](_reader);
+      reader[1](_reader);
 
-    let result = "";
-    // const space = ref.current?.lastChild;
-    while (true) {
-      const { done, value } = await _reader.read();
-      if (done) break;
-      const text = new TextDecoder().decode(value);
-      const add = document.createElement("span");
-      add.innerText = text;
-      add.className = "animate-fade-in";
-      ref.current?.appendChild(add);
-      result += text;
-    }
-    // Adds blank space at the bottom of the text so that the text will scroll to a readable position.
-    // const add = document.createElement("span");
-    // add.className = "h-[40vh] w-full block";
-    // ref.current?.appendChild(add);
+      let result = "";
+      // const space = ref.current?.lastChild;
+      while (true) {
+        const { done, value } = await _reader.read();
+        if (done) break;
+        const text = new TextDecoder().decode(value);
+        const add = document.createElement("span");
+        add.innerText = text;
+        add.className = "animate-fade-in";
+        ref.current?.appendChild(add);
+        result += text;
+      }
+      // Adds blank space at the bottom of the text so that the text will scroll to a readable position.
+      // const add = document.createElement("span");
+      // add.className = "h-[40vh] w-full block";
+      // ref.current?.appendChild(add);
 
-    state[1](2); // Finished
-  };
+      state[1](2); // Finished
+    };
 
   const handleCancel = () => {
     reader[0]?.cancel();
@@ -138,11 +80,11 @@ export default function ElleLM({
   };
 
   const handleClose = () => {
-    if (state[0] === 2) {
-      reader[0]?.cancel();
-    }
     ref.current?.classList.add("animate-fade-out");
+    state[1](4); // Closing
+    reset[1]([]);
     setTimeout(() => {
+      prevExplained[1]([...selected]);
       if (ref.current) ref.current.textContent = "";
       ref.current?.classList.remove("animate-fade-out");
       state[1](0); // Idle
@@ -162,8 +104,11 @@ export default function ElleLM({
       <div
         className={
           "fixed box-content left-0 bottom-0 w-screen transition-all duration-[2.5s] border-fg ease-in-out bg-accent-fg" +
-          (state[0] > 0 ? " h-screen border-t-2" : " h-0 border-t-0")
+          (state[0] > 0 ? " border-t-2" : " border-t-0")
         }
+        style={{
+          height: state[0] > 0 ? `calc(100% - 8.375rem)` : 0,
+        }}
       />
       <h1
         className={
@@ -171,7 +116,7 @@ export default function ElleLM({
           (selected.length ? " h-12" : " h-0")
         }
       >
-        Tell me about{" "}
+        Tell me about
       </h1>
       <span
         className={
@@ -184,16 +129,19 @@ export default function ElleLM({
         Select one or more items below to learn more.
       </span>
       <div className="z-10">
-        {selected.length ? (
-          <Loading
-            duration={3}
-            onLoad={handleExplain}
-            reset={reset}
-            className="col-span-2 z-10"
-          />
-        ) : (
-          <div className="h-0.5 rounded-full bg-dark/30 dark:bg-light/30" />
-        )}
+        <Loading
+          duration={3}
+          delay={1.5}
+          resetDuration={0.5}
+          onLoad={handleExplain}
+          reset={reset[0]}
+          className="col-span-2 z-10"
+          paused={
+            (prevExplained.length &&
+              JSON.stringify(selected) === JSON.stringify(prevExplained[0])) ||
+            selState[0] === 2
+          }
+        />
       </div>
       <div
         onClick={() => selState[1](2)}
@@ -288,7 +236,10 @@ export default function ElleLM({
           }
           onClick={(e) => {
             e.stopPropagation();
-            selState[1](selState[0] === 2 ? 1 : 2);
+            if (selState[0] === 2) {
+              selState[1](1);
+              reset[1]([]);
+            } else selState[1](2);
           }}
         >
           <span
@@ -324,7 +275,7 @@ export default function ElleLM({
         onClick={state[0] > 1 ? handleClose : handleCancel}
         className={
           "w-full py-2 c-invert fixed bottom-0 left-0 transition-all duration-500 text-4xl text-center" +
-          (state[0] > 0
+          (state[0] > 0 && state[0] < 4
             ? " opacity-1 translate-y-0"
             : " opacity-0 translate-y-8")
         }

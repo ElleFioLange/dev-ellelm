@@ -8,9 +8,10 @@ export type State =
   | 0 // Idle
   | 1 // Streaming
   | 2 // Finished
-  | 3; // Canceled
+  | 3 // Canceled
+  | 4; // Closing
 
-// TODO Use localStorage to direct visitors to mobile site if they haven't visited it yet (bc it's just so good)
+// TODO Use localStorage to recommend visitors to check out mobile site if they haven't visited it yet (bc it's just so good)
 
 export default function Home() {
   const loadingAnim = useState(true);
@@ -25,21 +26,11 @@ export default function Home() {
 
   const reset = useState([]);
 
+  useEffect(() => reset[1]([]), []);
+
   useEffect(() => {
     setTimeout(() => loadingAnim[1](false), 1500);
   }, []);
-
-  // const fade = useMemo(() => {
-  //   const base = getComputedStyle(document.body).getPropertyValue("var(--fg)");
-  //   const accent = getComputedStyle(document.body).getPropertyValue(
-  //     "var(--accent-100)"
-  //   );
-
-  //   return {
-  //     base,
-  //     accent,
-  //   };
-  // }, []);
 
   const Option = ({ name }: { name: string }) => {
     const scale = useState<number>(1);
@@ -99,7 +90,7 @@ export default function Home() {
       }
       onScroll={() => reset[1]([])}
     >
-      <section className="z-10 fixed w-full px-4 pt-6 left-0 top-0 max-h-screen flex flex-col bg-bg">
+      <header className="z-10 fixed w-full px-4 pt-6 left-0 top-0 max-h-screen flex flex-col bg-bg">
         <div className="w-full h-16 bg-gradient-to-b absolute -bottom-16 left-0 from-bg via-bg/80 via-35%" />
 
         <h2 className="z-10 relative text-right text-3xl overflow-x-auto shrink-0 whitespace-nowrap">
@@ -114,11 +105,11 @@ export default function Home() {
 
         <ElleLM
           selected={selected[0]}
-          reset={reset[0]}
+          reset={reset}
           handleRemove={handleRemove}
-          state={state} // TODO
+          state={state}
         />
-      </section>
+      </header>
 
       <section className="flex flex-col items-center mt-48 animate-scroll-up">
         <h1 className="text-center">I'm a</h1>

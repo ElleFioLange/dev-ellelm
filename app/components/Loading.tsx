@@ -1,6 +1,6 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Loading({
   duration,
@@ -9,64 +9,70 @@ export default function Loading({
   onLoad,
   className,
   reset,
+  paused,
 }: {
-  // TODO Add pause
   duration: number;
-  // Default is 0.5s
-  resetDuration?: number;
-  // Default is 1.5s
-  delay?: number;
+  resetDuration: number;
+  delay: number;
   onLoad: () => void;
   className?: string;
   reset: any;
+  paused: boolean;
 }) {
   const loader = useRef<HTMLDivElement>(null);
 
-  loader.current?.offsetWidth;
+  useGSAP(() => {
+    // TODO Fix weird jump on initial reset
+    const loading = gsap.isTweening(loader.current);
+    const width = loading ? gsap.getProperty(loader.current, "width") : 0;
+    console.log(loading);
 
-  useGSAP(
-    () => {
-      const _resetDuration = resetDuration !== undefined ? resetDuration : 0.5;
-      const _delay = delay !== undefined ? delay : 1.5;
-
-      const _width = loader.current?.offsetWidth;
-
-      if (_width) {
+    if (!paused) {
+      if (loading) {
         gsap.killTweensOf(loader.current);
         gsap.to(loader.current, {
-          duration: _resetDuration,
+          duration: resetDuration,
           width: "0%",
         });
         gsap.to(loader.current, {
           duration,
-          delay: _delay + _resetDuration,
+          delay: delay + resetDuration,
           width: "100%",
         });
       } else {
         gsap.to(loader.current, {
           duration,
-          delay: _delay,
+          delay,
           width: "100%",
         });
       }
-    },
-    { dependencies: [reset] }
-  );
+    } else {
+      gsap.killTweensOf(loader.current);
+      if (width) {
+        gsap.to(loader.current, {
+          duration: resetDuration,
+          width: "0%",
+        });
+      }
+    }
+  }, [reset, paused]);
 
   useEffect(() => {
-    const timeout = setTimeout(onLoad, (duration + (delay || 1.5)) * 1000);
+    if (!paused) {
+      const timeout = setTimeout(
+        onLoad,
+        (duration + delay) * 1000 +
+          // Add 0.1s as a buffer for the animation to finish
+          100
+      );
 
-    return () => clearTimeout(timeout);
-  }, [reset]);
+      return () => clearTimeout(timeout);
+    }
+  }, [reset, paused]);
 
   return (
-    <div
-      className={"h-0.5 rounded-full bg-dark/30 dark:bg-light/30 " + className}
-    >
-      <div
-        ref={loader}
-        className="h-full w-0 rounded-full bg-dark dark:bg-light"
-      />
+    <div className={"h-0.5 rounded-full bg-fg/30 " + className}>
+      <div ref={loader} className="h-full w-0 rounded-full bg-fg" />
     </div>
   );
 }
