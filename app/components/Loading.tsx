@@ -22,13 +22,10 @@ export default function Loading({
   const loader = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    // TODO Fix weird jump on initial reset
-    const loading = gsap.isTweening(loader.current);
-    const width = loading ? gsap.getProperty(loader.current, "width") : 0;
-    console.log(loading);
+    const width = gsap.getProperty(loader.current, "width");
 
     if (!paused) {
-      if (loading) {
+      if (width) {
         gsap.killTweensOf(loader.current);
         gsap.to(loader.current, {
           duration: resetDuration,

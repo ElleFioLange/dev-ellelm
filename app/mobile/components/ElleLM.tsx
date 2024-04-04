@@ -35,7 +35,6 @@ export default function ElleLM({
     }
   }, [selected]);
 
-  // TODO Use Claude
   const handleExplain =
     // Uncomment to disable GPT inference
     // () => {};
