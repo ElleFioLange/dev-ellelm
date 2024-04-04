@@ -9,7 +9,7 @@ const cormorant = Cormorant({
 });
 
 const cormorant_unicase = Cormorant_Unicase({
-  weight: "300",
+  weight: ["300", "700"],
   subsets: ["latin"],
 });
 
