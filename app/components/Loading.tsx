@@ -10,6 +10,7 @@ export default function Loading({
   className,
   reset,
 }: {
+  // TODO Add pause
   duration: number;
   // Default is 0.5s
   resetDuration?: number;
@@ -20,6 +21,8 @@ export default function Loading({
   reset: any;
 }) {
   const loader = useRef<HTMLDivElement>(null);
+
+  loader.current?.offsetWidth;
 
   useGSAP(
     () => {

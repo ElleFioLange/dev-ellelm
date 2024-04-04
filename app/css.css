@@ -114,6 +114,19 @@
   .ellelm-grid > p:nth-child(4) {
     grid-area: d;
   }
+
+  .intro-circle {
+    @apply animate-intro-circle rounded-full  fixed opacity-0 pointer-events-none z-50;
+    background: radial-gradient(
+      circle at 75% 25%,
+      rgb(var(--alabaster)),
+      rgb(var(--cave))
+    );
+    width: 120vh;
+    height: 120vh;
+    top: calc(50% - 60vh);
+    left: calc(50% - 60vh);
+  }
 }
 
 @layer utilities {

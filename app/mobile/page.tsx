@@ -10,7 +10,10 @@ export type State =
   | 2 // Finished
   | 3; // Canceled
 
+// TODO Use localStorage to direct visitors to mobile site if they haven't visited it yet (bc it's just so good)
+
 export default function Home() {
+  const loadingAnim = useState(true);
   const selected = useState<Array<string>>([
     // "option",
     // "option",
@@ -21,6 +24,10 @@ export default function Home() {
   const state = useState<State>(0);
 
   const reset = useState([]);
+
+  useEffect(() => {
+    setTimeout(() => loadingAnim[1](false), 4250);
+  }, []);
 
   // const fade = useMemo(() => {
   //   const base = getComputedStyle(document.body).getPropertyValue("var(--fg)");
@@ -69,10 +76,10 @@ export default function Home() {
         //   color: `#${interpolateColor(fade.accent, fade.base, highlight[0])}`,
         // }}
         onClick={() => {
-          selected[1]([...selected[0], name]);
+          if (isSelected) handleRemove({ name });
+          else selected[1]([...selected[0], name]);
           reset[1]([]);
         }}
-        disabled={isSelected}
       >
         {name}
       </button>
@@ -87,15 +94,19 @@ export default function Home() {
   return (
     <main
       className={
-        "pt-0 w-screen max-w-screen h-screen max-h-screen no-scrollbar overflow-auto"
+        "pt-0 w-screen max-w-screen h-screen max-h-screen no-scrollbar overflow-auto" +
+        (loadingAnim ? " pointer-events-none" : "")
       }
       onScroll={() => reset[1]([])}
     >
-      <section className="z-10 fixed w-full px-4 pt-12 left-0 top-0 max-h-screen flex flex-col bg-bg">
+      <div className="intro-circle" />
+      <section className="z-10 fixed w-full px-4 pt-6 left-0 top-0 max-h-screen flex flex-col bg-bg">
         <div className="w-full h-16 bg-gradient-to-b absolute -bottom-16 left-0 from-bg via-bg/80 via-35%" />
 
-        <h2 className="z-10 relative text-right">Elle Fiorentino-Lange</h2>
-        <nav className="z-10 relative flex flex-row-reverse gap-8 mb-4">
+        <h2 className="z-10 relative text-right text-3xl overflow-x-auto shrink-0 whitespace-nowrap">
+          Elle Fiorentino-Lange
+        </h2>
+        <nav className="z-10 overflow-x-auto shrink-0 relative transition-all duration-500 ease-in-out flex flex-row-reverse gap-8 mb-4">
           <Link href="#">Home</Link>
           <Link href="#">Contact</Link>
           <Link href="#">Portfolio</Link>
@@ -106,11 +117,11 @@ export default function Home() {
           selected={selected[0]}
           reset={reset[0]}
           handleRemove={handleRemove}
-          state={state}
+          state={state} // TODO
         />
       </section>
 
-      <section className="flex flex-col items-center mt-[calc(100vh_-_4rem)]">
+      <section className="flex flex-col items-center mt-48 animate-scroll-up">
         <h1 className="text-center">I'm a</h1>
         <Option name="Developer" />
         <Option name="Designer" />
