@@ -1,6 +1,7 @@
 import { Dispatch, useEffect, useMemo, useRef, useState } from "react";
 import Loading from "../../components/Loading";
 import { State } from "../page";
+import { useGSAP } from "@gsap/react";
 
 export default function ElleLM({
   selected,
@@ -10,10 +11,13 @@ export default function ElleLM({
 }: {
   selected: Array<string>;
   handleRemove: (args: { name: string }) => void;
-  // Used to reset the Loading componentx
+  // TODO Add tracking for previously explained terms to prevent re-explaining
+  // Used to reset the Loading component
   reset: never[];
   state: [State, Dispatch<State>];
 }) {
+  // TODO Store text
+  const text = useState("");
   const reader = useState<ReadableStreamReader<Uint8Array>>();
   // Selected state
   const selState = useState<
@@ -21,13 +25,6 @@ export default function ElleLM({
     | 1 // Preview
     | 2 // Open
   >(0);
-  // Selected lefts
-  // When removing a selected term, the left position of the remaining terms will be recalculated.
-  // The recalculation uses the current window position, which causes the terms to jump around.
-  // This state is used to store the left position of the terms when the terms are in the open state.
-  const lefts = useState<{
-    [term: string]: string;
-  }>({});
 
   const ref = useRef<HTMLParagraphElement>(null);
 
@@ -39,42 +36,101 @@ export default function ElleLM({
     }
   }, [selected]);
 
+  // const Selection = ({ name, i }: { name: string; i: number }) => {
+  //   const pos = useMemo(() => selPos[0][name] || ["0px", "0px"], [selPos]);
+
+  //   const ref = useRef<HTMLSpanElement>(null);
+
+  //   useGSAP(() => {
+  //     let left = "0px";
+  //     let top = "0px";
+
+  //     if (selState[0] === 2) {
+  //       const elm = ref.current;
+  //       const x = elm?.offsetLeft;
+  //       const w = elm?.offsetWidth;
+  //       const c = window.innerWidth / 2;
+
+  //       const _left = x && w && c ? c - x - w / 2 : 0;
+
+  //       // Accodomodate padding and margin of containers
+  //       const m = parseInt(getComputedStyle(document.documentElement).fontSize);
+
+  //       left = `${_left - m}px`;
+
+  //       // if (pos[0][1] !== "0px") top = pos[0][1];
+  //       top = `${(i * 4 + 1) * m}px`;
+  //     }
+
+  //     if (JSON.stringify(pos) !== JSON.stringify([left, top]))
+  //       selPos[1]({ ...selPos[0], [name]: [left, top] });
+
+  //     gsap.to(ref.current, {});
+  //   }, [i, selState[0]]);
+
+  //   console.log("pos", pos);
+
+  //   return (
+  //     <span
+  //       // key={name}
+  //       ref={ref}
+  //       onClick={() =>
+  //         selState[0] === 2 ? handleRemove({ name }) : selState[1](2)
+  //       }
+  //       className="inline-block relative text-2xl cursor-pointer whitespace-nowrap transition-all ease-in-out duration-500"
+  //       // onClick={() => handleChange({ change: "remove", name })}
+  //     >
+  //       {name}
+  //       {/* <span
+  //         className={
+  //           "text-red text-lg absolute -right-2 -top-1 transition-all duration-500 ease-in-out" +
+  //           (selState[0] === 2 ? " opacity-1" : " opacity-0")
+  //         }
+  //       >
+  //         x
+  //       </span> */}
+  //     </span>
+  //   );
+  // };
+
+  // TODO Use Claude
   const handleExplain =
-    //
-    // () => {};
-    async () => {
-      const response = await fetch("/api/explain", {
-        method: "POST",
-        body: JSON.stringify({ selected }),
-      });
+    // Uncomment to disable GPT inference
+    () => {};
+  async () => {
+    const response = await fetch("/api/explain", {
+      method: "POST",
+      body: JSON.stringify({ selected }),
+    });
 
-      selState[1](0); // Closed
-      state[1](1); // Streaming
+    selState[1](0); // Closed
+    state[1](1); // Streaming
 
-      const _reader = response.body?.getReader();
+    const _reader = response.body?.getReader();
 
-      if (!_reader) return;
+    if (!_reader) return;
 
-      reader[1](_reader);
+    reader[1](_reader);
 
-      let result = "";
-      while (true) {
-        const { done, value } = await _reader.read();
-        if (done) break;
-        const text = new TextDecoder().decode(value);
-        const add = document.createElement("span");
-        add.innerText = text;
-        add.className = "animate-fade-in";
-        ref.current?.appendChild(add);
-        result += text;
-      }
-      // Adds blank space at the bottom of the text so that the text will scroll to a readable position.
+    let result = "";
+    // const space = ref.current?.lastChild;
+    while (true) {
+      const { done, value } = await _reader.read();
+      if (done) break;
+      const text = new TextDecoder().decode(value);
       const add = document.createElement("span");
-      add.className = "h-[40vh] w-full block";
+      add.innerText = text;
+      add.className = "animate-fade-in";
       ref.current?.appendChild(add);
+      result += text;
+    }
+    // Adds blank space at the bottom of the text so that the text will scroll to a readable position.
+    // const add = document.createElement("span");
+    // add.className = "h-[40vh] w-full block";
+    // ref.current?.appendChild(add);
 
-      state[1](2); // Finished
-    };
+    state[1](2); // Finished
+  };
 
   const handleCancel = () => {
     reader[0]?.cancel();
@@ -99,13 +155,13 @@ export default function ElleLM({
   return (
     <div
       className={
-        "max-h-full relative overflow-hidden flex flex-col" +
+        "max-h-full relative overflow-hidden flex flex-col transition-all duration-500 ease-in-out" +
         (selected.length ? " -mt-4" : " mt-0")
       }
     >
       <div
         className={
-          "fixed box-content left-0 bottom-0 w-screen transition-all duration-[2.5s] border-dark dark:border-light ease-in-out bg-accent-fg" +
+          "fixed box-content left-0 bottom-0 w-screen transition-all duration-[2.5s] border-fg ease-in-out bg-accent-fg" +
           (state[0] > 0 ? " h-screen border-t-2" : " h-0 border-t-0")
         }
       />
@@ -117,6 +173,16 @@ export default function ElleLM({
       >
         Tell me about{" "}
       </h1>
+      <span
+        className={
+          "overflow-hidden font-cormorant text-center transition-all inline-block duration-500 ease-in-out" +
+          (selState[0] === 0 && !selected.length
+            ? " opacity-1 h-6"
+            : " opacity-0 h-0")
+        }
+      >
+        Select one or more items below to learn more.
+      </span>
       <div className="z-10">
         {selected.length ? (
           <Loading
@@ -132,42 +198,63 @@ export default function ElleLM({
       <div
         onClick={() => selState[1](2)}
         className={
-          "border-fg shrink-0 flex overscroll-contain flex-col relative overflow-hidden w-full duration-500 ease-in-out transition-all" +
-          (selState[0] === 0 ? " mt-0 border-0 h-0" : "") +
-          (selState[0] === 1 ? " mt-0 border border-t-0 h-14" : "") +
-          (selState[0] === 2 ? " mt-4 border h-[60vh]" : "")
+          "shrink-0 flex overscroll-contain flex-col relative overflow-hidden w-full duration-500 ease-in-out transition-all" +
+          (selState[0] === 0 ? " mt-0 h-0" : "") +
+          (selState[0] === 1 ? " mt- h-14" : "") +
+          (selState[0] === 2 ? " mt-4 h-[60vh]" : "")
         }
       >
         <div className="w-full overflow-y-auto overflow-x-hidden grow">
           <div
-            className="white-space-nowrap width-full mx-2 flex gap-2"
+            id="selection-container"
+            className="white-space-nowrap width-full flex gap-2"
             style={{
-              height: selState[0] === 2 ? `${selected.length}rem` : " h-4",
+              height: selState[0] === 2 ? `${selected.length + 12}rem` : "",
             }}
           >
             {selected.map((name, i) => {
               let left = "0px";
+              let top = "0px";
               if (selState[0] === 2) {
                 const elm = document.getElementById(`selection-${name}`);
-                const x = elm?.offsetLeft;
-                const w = elm?.offsetWidth;
-                const c = window.innerWidth / 2;
+                if (elm) {
+                  const x = elm.offsetLeft;
+                  const w = elm.offsetWidth;
+                  const c = window.innerWidth / 2;
 
-                const _left = x && w && c ? c - x - w / 2 : 0;
+                  const _left = c - x - w / 2;
 
-                // Accodomodate padding and margin of containers
-                const m = parseInt(
-                  getComputedStyle(document.documentElement).fontSize
-                );
+                  // Account for padding and margin of containers
+                  const t = parseInt(
+                    getComputedStyle(document.documentElement).fontSize
+                  );
 
-                left = `${_left - m}px`;
+                  // Account for width of removed elements
+                  let p = 0;
+                  const container = document.getElementById(
+                    "selection-container"
+                  );
+                  const children = container?.children;
+                  if (children && children?.length !== selected.length) {
+                    const [{ c, _i }] = Array.from(children)
+                      .map((c, _i) => ({ c, _i }))
+                      .filter(({ c }) => {
+                        // Slice off the X
+                        const text = c.textContent?.slice(0, -1) || "";
+                        return !selected.includes(text);
+                      });
+
+                    if (i >= _i) p = c.clientWidth + t / 2;
+                  }
+
+                  left = `${_left - t + p}px`;
+                  top = `${i * 4 + 1}rem`;
+                }
               }
-
-              const top = selState[0] === 2 ? `${i * 4 + 1}rem` : 0;
 
               return (
                 <span
-                  key={name}
+                  key={name + i}
                   id={`selection-${name}`}
                   style={{
                     transform: `translate(${left}, ${top})`,
@@ -175,28 +262,29 @@ export default function ElleLM({
                   onClick={() =>
                     selState[0] === 2 ? handleRemove({ name }) : selState[1](2)
                   }
-                  className="inline-block relative text-2xl cursor-pointer whitespace-nowrap transition-all ease-in-out duration-500"
+                  className="inline-block text-2xl cursor-pointer whitespace-nowrap transition-all ease-in-out duration-500"
                   // onClick={() => handleChange({ change: "remove", name })}
                 >
                   {name}
-                  {/* <span
+                  <span
                     className={
                       "text-red text-lg absolute -right-2 -top-1 transition-all duration-500 ease-in-out" +
                       (selState[0] === 2 ? " opacity-1" : " opacity-0")
                     }
                   >
                     x
-                  </span> */}
+                  </span>
                 </span>
               );
             })}
           </div>
         </div>
 
+        {/* TODO Add clear button */}
         <button
           className={
-            "w-full border-fg block shrink-0 absolute bottom-0 c-invert text-center transition-all duration-300 ease-in-out" +
-            (selState[0] === 2 ? " h-12 " : " h-6 border-0")
+            "w-full block shrink-0 absolute bg-bg border border-b-2 border-fg bottom-0 text-center transition-all duration-300 ease-in-out" +
+            (selState[0] === 2 ? " h-12 c-invert" : " h-6")
           }
           onClick={(e) => {
             e.stopPropagation();
@@ -205,7 +293,7 @@ export default function ElleLM({
         >
           <span
             className={
-              "transition-all duration-300 ease-in-out grid place-items-center" +
+              "transition-all duration-300 ease-in-out inline-block" +
               (selState[0] === 2
                 ? " rotate-180 scale-[200%] font-bold"
                 : " rotate-0 scale-100 font-normal")
@@ -223,29 +311,19 @@ export default function ElleLM({
           }
         />
       </div>
+
       {/* TODO Use state to manage expand and hide/show of cancel/close button */}
       <p
         className={
-          "font-cormorant transition-all duration-300 ease-in-out w-full max-h-full relative whitespace-pre-wrap overflow-auto grow overscroll-none" +
-          (state[0] > 0
-            ? " text-justify pr-12 pl-2 pt-2"
-            : " text-center pr-0 pl-0 pt-1")
+          "font-cormorant text-justify no-scrollbar transition-all text-base duration-300 ease-in-out w-full max-h-full relative whitespace-pre-wrap overflow-auto grow overscroll-none" +
+          (state[0] > 0 ? " pr-12 pl-2 pt-2 pb-[40vh]" : " pr-0 pl-0 pt-1 pb-0")
         }
         ref={ref}
-      >
-        <span
-          className={
-            "overflow-hidden transition-all duration-500 ease-in-out" +
-            (selState[0] === 0 ? " opacity-1 h-4" : " opacity-0 h-0")
-          }
-        >
-          Select one or more items below to learn more.
-        </span>
-      </p>
+      />
       <button
         onClick={state[0] > 1 ? handleClose : handleCancel}
         className={
-          "w-full py-4 c-invert fixed bottom-0 left-0 transition-all duration-500 text-4xl text-center" +
+          "w-full py-2 c-invert fixed bottom-0 left-0 transition-all duration-500 text-4xl text-center" +
           (state[0] > 0
             ? " opacity-1 translate-y-0"
             : " opacity-0 translate-y-8")
