@@ -26,7 +26,7 @@ export default function Home() {
   const reset = useState([]);
 
   useEffect(() => {
-    setTimeout(() => loadingAnim[1](false), 4250);
+    setTimeout(() => loadingAnim[1](false), 1500);
   }, []);
 
   // const fade = useMemo(() => {
@@ -95,11 +95,10 @@ export default function Home() {
     <main
       className={
         "pt-0 w-screen max-w-screen h-screen max-h-screen no-scrollbar overflow-auto" +
-        (loadingAnim ? " pointer-events-none" : "")
+        (loadingAnim[0] ? " pointer-events-none" : "")
       }
       onScroll={() => reset[1]([])}
     >
-      <div className="intro-circle" />
       <section className="z-10 fixed w-full px-4 pt-6 left-0 top-0 max-h-screen flex flex-col bg-bg">
         <div className="w-full h-16 bg-gradient-to-b absolute -bottom-16 left-0 from-bg via-bg/80 via-35%" />
 
