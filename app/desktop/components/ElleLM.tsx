@@ -7,56 +7,73 @@ export default function ElleLM({
   handleRemove,
   reset,
   state,
+  paused,
 }: {
   selected: Array<string>;
   handleRemove: (name: string) => void;
   reset: [never[], Dispatch<never[]>];
   state: [State, Dispatch<State>];
+  paused: [boolean, Dispatch<boolean>];
 }) {
   const text = useState("");
+  const reader = useState<ReadableStreamReader<Uint8Array>>();
   const prevExplained = useState<string[]>([]);
-
-  const displayText = useMemo(() => {
-    if (text) return text;
-    if (selected.length) return "";
-    return "Select one or more items above to learn more.";
-  }, [text, selected]);
 
   const ref = useRef<HTMLParagraphElement>(null);
 
+  // TODO Fix bug with repeated inferences
   const handleExplain =
     // Uncomment to disable GPT inference
-    () => {
-      text[1]("asdopifajelkf jajweofpij awelfkj asd;lf jaose fas");
-      state[1](1);
-    };
-  async () => {
-    state[1](1); // Streaming
+    // () => {};
+    async () => {
+      const response = await fetch("/api/explain", {
+        method: "POST",
+        body: JSON.stringify({ selected }),
+      });
 
-    const response = await fetch("/api/explain", {
-      method: "POST",
-      body: JSON.stringify({ selected }),
-    });
+      state[1](1); // Streaming
 
-    const reader = response.body?.getReader();
+      const _reader = response.body?.getReader();
 
-    if (!reader) return;
+      if (!_reader) return;
 
-    let result = "";
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      const _text = new TextDecoder().decode(value);
-      const add = document.createElement("span");
-      add.innerText = _text;
-      add.className = "animate-fade-in";
-      ref.current?.appendChild(add);
-      result += _text;
+      reader[1](_reader);
+
+      let result = "";
+      while (true) {
+        const { done, value } = await _reader.read();
+        if (done) break;
+        const _text = new TextDecoder().decode(value);
+        if (_text.includes("errno")) {
+          // TODO Error handling
+          break;
+        }
+        const add = document.createElement("span");
+        add.innerText = _text;
+        add.className = "animate-fade-in";
+        ref.current?.appendChild(add);
+        result += _text;
+      }
+
       text[1](result);
-      // ref.current?.scrollTo({
-      //   top: ref.current.scrollHeight,
-      // });
-    }
+      state[1](2); // Finished
+      prevExplained[1]([...selected]);
+    };
+
+  const handleCancel = () => {
+    reader[0]?.cancel();
+    state[1](3); // Canceled
+  };
+
+  const handleClose = () => {
+    ref.current?.classList.add("animate-fade-out");
+    state[1](4); // Closing
+    reset[1]([]);
+    setTimeout(() => {
+      if (ref.current) ref.current.textContent = "";
+      ref.current?.classList.remove("animate-fade-out");
+      state[1](0); // Idle
+    }, 1000);
   };
 
   return (
@@ -69,11 +86,21 @@ export default function ElleLM({
       />
       <div
         className={
-          "box-content left-0 bottom-0 w-full transition-all duration-[2.5s] border-fg ease-in-out bg-accent-bg" +
+          "box-content left-0 bottom-0 w-full transition-all duration-[2.5s] border-fg ease-in-out bg-accent-fg" +
           (state[0] > 0 ? " h-full border-t-2" : " h-0 border-t-0")
         }
       />
       <h1 className={selected.length ? "" : " opacity-30"}>Tell me about </h1>
+      <button
+        className={
+          "relative w-full px-2 flex justify-end items-end text-red hover:bg-red/10 transition-all duration-150 ease-in-out" +
+          (state[0] > 0 && state[0] < 4 ? " opacity-1" : " opacity-0")
+        }
+        onClick={state[0] > 1 ? handleClose : handleCancel}
+        disabled={state[0] === 0 || state[0] === 4}
+      >
+        {state[0] > 1 ? "Close" : "Cancel"}
+      </button>
 
       {/* <button className={""} /> */}
 
@@ -85,8 +112,10 @@ export default function ElleLM({
         reset={reset}
         className="col-span-2"
         paused={
-          prevExplained.length &&
-          JSON.stringify(selected) === JSON.stringify(prevExplained[0])
+          (prevExplained.length &&
+            JSON.stringify(selected) === JSON.stringify(prevExplained[0])) ||
+          paused[0] ||
+          state[0] > 0
         }
       />
 
@@ -99,6 +128,8 @@ export default function ElleLM({
               (state[0] > 0 ? " text-bg" : "")
             }
             onClick={() => handleRemove(name)}
+            onMouseEnter={() => paused[1](true)}
+            onMouseLeave={() => paused[1](false)}
           >
             {name}
           </button>
@@ -108,7 +139,7 @@ export default function ElleLM({
       {/* TODO Make previous text viewable after close */}
       <p
         className={
-          "font-cormorant text-bg ml-2 pr-2 whitespace-pre-wrap overflow-auto h-full" +
+          "font-cormorant ml-2 pr-2 whitespace-pre-wrap overflow-auto h-full" +
           (state[0] > 0 ? " pr-12 pl-2 pt-2 pb-64" : " pr-0 pl-0 pt-1 pb-0")
         }
         ref={ref}

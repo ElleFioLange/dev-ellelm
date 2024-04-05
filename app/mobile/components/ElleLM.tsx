@@ -66,7 +66,9 @@ export default function ElleLM({
         result += _text;
       }
 
+      text[1](result);
       state[1](2); // Finished
+      prevExplained[1]([...selected]);
     };
 
   const handleCancel = () => {
@@ -79,7 +81,6 @@ export default function ElleLM({
     state[1](4); // Closing
     reset[1]([]);
     setTimeout(() => {
-      prevExplained[1]([...selected]);
       if (ref.current) ref.current.textContent = "";
       ref.current?.classList.remove("animate-fade-out");
       state[1](0); // Idle
@@ -134,7 +135,8 @@ export default function ElleLM({
           paused={
             (prevExplained.length &&
               JSON.stringify(selected) === JSON.stringify(prevExplained[0])) ||
-            selState[0] === 2
+            selState[0] === 2 ||
+            state[0] > 0
           }
         />
       </div>
@@ -262,7 +264,7 @@ export default function ElleLM({
       <p
         className={
           "font-cormorant text-justify no-scrollbar transition-all text-base duration-300 ease-in-out w-full max-h-full relative whitespace-pre-wrap overflow-auto grow overscroll-none" +
-          (state[0] > 0 ? " pr-12 pl-2 pt-2 pb-[40vh]" : " pr-0 pl-0 pt-1 pb-0")
+          (state[0] > 0 ? " pr-6 pl-2 pt-2 pb-[40vh]" : " pr-0 pl-0 pt-1 pb-0")
         }
         ref={ref}
       />
@@ -274,6 +276,7 @@ export default function ElleLM({
             ? " opacity-1 translate-y-0"
             : " opacity-0 translate-y-8")
         }
+        disabled={state[0] === 0 || state[0] === 4}
       >
         {state[0] > 1 ? "Close" : "Cancel"}
       </button>

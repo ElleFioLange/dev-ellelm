@@ -113,15 +113,19 @@
     grid-area: a;
   }
 
-  .ellelm-grid > div:nth-child(4) {
-    grid-area: b;
+  .ellelm-grid > button:nth-child(4) {
+    grid-area: a;
   }
 
   .ellelm-grid > div:nth-child(5) {
+    grid-area: b;
+  }
+
+  .ellelm-grid > div:nth-child(6) {
     grid-area: c;
   }
 
-  .ellelm-grid > p:nth-child(6) {
+  .ellelm-grid > p:nth-child(7) {
     grid-area: d;
   }
 }

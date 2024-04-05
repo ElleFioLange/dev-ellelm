@@ -9,6 +9,7 @@ export default function Home() {
   const selected = useState<Array<string>>([]);
   const state = useState<State>(0);
   const reset = useState([]);
+  const paused = useState(false);
 
   const Option = ({ name }: { name: string }) => {
     const isSelected = selected[0].includes(name);
@@ -16,7 +17,7 @@ export default function Home() {
       // TODO Fade in background hover
       <button
         className={
-          "text-lg pl-1 block w-full text-left" +
+          "text-lg pl-1 block w-full transition-all duration-150 ease-in-out text-left" +
           (isSelected
             ? " text-accent-mid cursor-pointer bg-accent-mid/10 hover:text-red hover:bg-red/10"
             : " hover:bg-accent-mid/10 hover:text-accent-mid")
@@ -26,8 +27,8 @@ export default function Home() {
           else selected[1]([...selected[0], name]);
           reset[1]([]);
         }}
-        onMouseEnter={() => reset[1]([])}
-        disabled={isSelected}
+        onMouseEnter={() => paused[1](true)}
+        onMouseLeave={() => paused[1](false)}
       >
         {name}
       </button>
@@ -77,6 +78,7 @@ export default function Home() {
         reset={reset}
         handleRemove={handleRemove}
         state={state}
+        paused={paused}
       />
 
       <section className="place-self-end">
@@ -87,7 +89,11 @@ export default function Home() {
         </h2>
       </section>
 
-      <nav className="flex flex-row-reverse gap-12 text-lg">
+      <nav
+        className="flex flex-row-reverse gap-12 text-lg"
+        onMouseEnter={() => paused[1](true)}
+        onMouseLeave={() => paused[1](false)}
+      >
         <Link href="#">Home</Link>
         <Link href="#">Contact</Link>
         <Link href="#">Portfolio</Link>
