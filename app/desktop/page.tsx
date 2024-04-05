@@ -3,22 +3,30 @@
 import Link from "next/link";
 import ElleLM from "./components/ElleLM";
 import { useState } from "react";
+import { State } from "@/utils/types/state";
 
 export default function Home() {
   const selected = useState<Array<string>>([]);
-
+  const state = useState<State>(0);
   const reset = useState([]);
 
   const Option = ({ name }: { name: string }) => {
     const isSelected = selected[0].includes(name);
     return (
+      // TODO Fade in background hover
       <button
-        className={"text-lg ml-1 block" + (isSelected ? " opacity-30" : "")}
+        className={
+          "text-lg pl-1 block w-full text-left" +
+          (isSelected
+            ? " text-accent-mid cursor-pointer bg-accent-mid/10 hover:text-red hover:bg-red/10"
+            : " hover:bg-accent-mid/10 hover:text-accent-mid")
+        }
         onClick={() => {
           if (isSelected) handleRemove(name);
           else selected[1]([...selected[0], name]);
           reset[1]([]);
         }}
+        onMouseEnter={() => reset[1]([])}
         disabled={isSelected}
       >
         {name}
@@ -68,6 +76,7 @@ export default function Home() {
         selected={selected[0]}
         reset={reset}
         handleRemove={handleRemove}
+        state={state}
       />
 
       <section className="place-self-end">

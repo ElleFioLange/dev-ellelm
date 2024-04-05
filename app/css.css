@@ -99,19 +99,29 @@
       "c d" 1fr / auto 1fr;
   }
 
-  .ellelm-grid > h1:nth-child(1) {
-    grid-area: a;
+  .ellelm-grid > div:nth-child(1) {
+    grid-column: 1 / 2;
+    grid-row: 2 / 4;
   }
 
   .ellelm-grid > div:nth-child(2) {
+    grid-column: 2 / 3;
+    grid-row: 2 / 4;
+  }
+
+  .ellelm-grid > h1:nth-child(3) {
+    grid-area: a;
+  }
+
+  .ellelm-grid > div:nth-child(4) {
     grid-area: b;
   }
 
-  .ellelm-grid > div:nth-child(3) {
+  .ellelm-grid > div:nth-child(5) {
     grid-area: c;
   }
 
-  .ellelm-grid > p:nth-child(4) {
+  .ellelm-grid > p:nth-child(6) {
     grid-area: d;
   }
 }

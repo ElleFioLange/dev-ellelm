@@ -3,13 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import ElleLM from "./components/ElleLM";
-
-export type State =
-  | 0 // Idle
-  | 1 // Streaming
-  | 2 // Finished
-  | 3 // Canceled
-  | 4; // Closing
+import { State } from "@/utils/types/state";
 
 // TODO Use localStorage to recommend visitors to check out mobile site if they haven't visited it yet (bc it's just so good)
 

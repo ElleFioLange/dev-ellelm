@@ -1,6 +1,6 @@
 import { Dispatch, useEffect, useMemo, useRef, useState } from "react";
 import Loading from "../../components/Loading";
-import { State } from "../page";
+import { State } from "@/utils/types/state";
 
 export default function ElleLM({
   selected,
@@ -58,17 +58,13 @@ export default function ElleLM({
       while (true) {
         const { done, value } = await _reader.read();
         if (done) break;
-        const text = new TextDecoder().decode(value);
+        const _text = new TextDecoder().decode(value);
         const add = document.createElement("span");
-        add.innerText = text;
+        add.innerText = _text;
         add.className = "animate-fade-in";
         ref.current?.appendChild(add);
-        result += text;
+        result += _text;
       }
-      // Adds blank space at the bottom of the text so that the text will scroll to a readable position.
-      // const add = document.createElement("span");
-      // add.className = "h-[40vh] w-full block";
-      // ref.current?.appendChild(add);
 
       state[1](2); // Finished
     };
@@ -94,7 +90,7 @@ export default function ElleLM({
   };
 
   return (
-    <div
+    <section
       className={
         "max-h-full relative overflow-hidden flex flex-col transition-all duration-500 ease-in-out" +
         (selected.length ? " -mt-4" : " mt-0")
@@ -281,6 +277,6 @@ export default function ElleLM({
       >
         {state[0] > 1 ? "Close" : "Cancel"}
       </button>
-    </div>
+    </section>
   );
 }
