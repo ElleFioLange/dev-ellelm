@@ -7,10 +7,7 @@
     --light: 251 249 244;
     --dark: 32 34 46;
 
-    --alabaster: 210 218 207;
-    --sage: 100 180 105;
-    --cave: 101 111 108;
-
+    --green: 100 180 105;
     --red: 221 44 76;
     /* --eggplant: 56 38 45;
     --rose: 244 198 202; */
@@ -18,10 +15,8 @@
     --fg: var(--dark);
     /* Background */
     --bg: var(--light);
-    /* Accents */
-    --accent-fg: var(--alabaster);
-    --accent-mid: var(--sage);
-    --accent-bg: var(--cave);
+    /* Accent */
+    --accent: var(--green);
 
     scrollbar-color: rgb(var(--fg)) #00000000;
 
@@ -34,9 +29,6 @@
       --fg: var(--light);
       /* Background */
       --bg: var(--dark);
-      /* Accents */
-      --accent-fg: var(--cave);
-      --accent-bg: var(--alabaster);
     }
   }
 

@@ -22,13 +22,7 @@ const config: Config = {
         fg: "rgb(var(--fg) / <alpha-value>)",
         bg: "rgb(var(--bg) / <alpha-value>)",
         // ===========================================
-        accent: {
-          fg: "rgb(var(--accent-fg) / <alpha-value>)",
-          mid: "rgb(var(--accent-mid) / <alpha-value>)",
-          bg: "rgb(var(--accent-bg) / <alpha-value>)",
-        },
-        // rose: "rgb(var(--rose) / <alpha-value>)",
-        // eggplant: "rgb(var(--eggplant) / <alpha-value>)",
+        accent: "rgb(var(--accent) / <alpha-value>)",
       },
       fontFamily: {
         cormorant: ["var(--cormorant)"],

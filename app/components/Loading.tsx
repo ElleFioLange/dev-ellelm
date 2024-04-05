@@ -44,8 +44,9 @@ export default function Loading({
         });
       }
     } else {
-      gsap.killTweensOf(loader.current);
-      if (width) {
+      const [tween] = gsap.getTweensOf(loader.current);
+      if (tween?.vars.width === "100%") {
+        gsap.killTweensOf(loader.current);
         gsap.to(loader.current, {
           duration: resetDuration,
           width: "0%",

@@ -26,6 +26,9 @@ export default function ElleLM({
     // Uncomment to disable GPT inference
     // () => {};
     async () => {
+      // Use timeout because Loading component resets when prevExplained is updated
+      setTimeout(() => prevExplained[1]([...selected]), 1000);
+
       const response = await fetch("/api/explain", {
         method: "POST",
         body: JSON.stringify({ selected }),
@@ -57,13 +60,14 @@ export default function ElleLM({
 
       text[1](result);
       state[1](2); // Finished
-      prevExplained[1]([...selected]);
     };
 
   const handleCancel = () => {
     reader[0]?.cancel();
     state[1](3); // Canceled
   };
+
+  // TODO Consolidate handlers across desktop and mobile into util file
 
   const handleClose = () => {
     ref.current?.classList.add("animate-fade-out");
@@ -86,14 +90,15 @@ export default function ElleLM({
       />
       <div
         className={
-          "box-content left-0 bottom-0 w-full transition-all duration-[2.5s] border-fg ease-in-out bg-accent-fg" +
+          "box-content left-0 bottom-0 w-full transition-all duration-[2.5s] border-fg ease-in-out bg-accent/10" +
           (state[0] > 0 ? " h-full border-t-2" : " h-0 border-t-0")
         }
       />
       <h1 className={selected.length ? "" : " opacity-30"}>Tell me about </h1>
       <button
+        //  TODO transition height add overflow-hidden
         className={
-          "relative w-full px-2 flex justify-end items-end text-red hover:bg-red/10 transition-all duration-150 ease-in-out" +
+          "relative text-xl w-min px-2 place-self-end text-red hover:bg-red/10 transition-all duration-150 ease-in-out" +
           (state[0] > 0 && state[0] < 4 ? " opacity-1" : " opacity-0")
         }
         onClick={state[0] > 1 ? handleClose : handleCancel}
@@ -127,7 +132,10 @@ export default function ElleLM({
               "text-lg px-2 w-full text-left cursor-pointer transition-all duration-150 ease-in-out block hover:text-red hover:bg-red/10" +
               (state[0] > 0 ? " text-bg" : "")
             }
-            onClick={() => handleRemove(name)}
+            onClick={() => {
+              handleRemove(name);
+              paused[1](false);
+            }}
             onMouseEnter={() => paused[1](true)}
             onMouseLeave={() => paused[1](false)}
           >
@@ -139,8 +147,8 @@ export default function ElleLM({
       {/* TODO Make previous text viewable after close */}
       <p
         className={
-          "font-cormorant ml-2 pr-2 whitespace-pre-wrap overflow-auto h-full" +
-          (state[0] > 0 ? " pr-12 pl-2 pt-2 pb-64" : " pr-0 pl-0 pt-1 pb-0")
+          "font-cormorant ml-4 whitespace-pre-wrap overflow-auto h-full" +
+          (state[0] > 0 ? " pr-12 pt-2 pb-64" : " pr-0 pt-1 pb-0")
         }
         ref={ref}
       />

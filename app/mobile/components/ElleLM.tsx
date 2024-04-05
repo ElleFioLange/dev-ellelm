@@ -39,6 +39,9 @@ export default function ElleLM({
     // Uncomment to disable GPT inference
     // () => {};
     async () => {
+      // Use timeout because Loading component resets when prevExplained is updated
+      setTimeout(() => prevExplained[1]([...selected]), 1000);
+
       const response = await fetch("/api/explain", {
         method: "POST",
         body: JSON.stringify({ selected }),
@@ -54,7 +57,6 @@ export default function ElleLM({
       reader[1](_reader);
 
       let result = "";
-      // const space = ref.current?.lastChild;
       while (true) {
         const { done, value } = await _reader.read();
         if (done) break;
@@ -68,7 +70,6 @@ export default function ElleLM({
 
       text[1](result);
       state[1](2); // Finished
-      prevExplained[1]([...selected]);
     };
 
   const handleCancel = () => {
@@ -99,7 +100,7 @@ export default function ElleLM({
     >
       <div
         className={
-          "fixed box-content left-0 bottom-0 w-screen transition-all duration-[2.5s] border-fg ease-in-out bg-accent-fg" +
+          "fixed box-content left-0 bottom-0 w-screen transition-all duration-[2.5s] border-fg ease-in-out bg-accent/10" +
           (state[0] > 0 ? " border-t-2" : " border-t-0")
         }
         style={{

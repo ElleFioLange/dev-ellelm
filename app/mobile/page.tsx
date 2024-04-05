@@ -24,7 +24,7 @@ export default function Home() {
       <button
         className={
           "text-2xl mt-16 block relative whitespace-nowrap w-full text-center" +
-          (isSelected ? " text-accent-mid bg-accent-mid/10" : "")
+          (isSelected ? " text-accent bg-accent/10" : "")
         }
         onClick={() => {
           if (isSelected) handleRemove(name);

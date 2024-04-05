@@ -19,16 +19,20 @@ export default function Home() {
         className={
           "text-lg pl-1 block w-full transition-all duration-150 ease-in-out text-left" +
           (isSelected
-            ? " text-accent-mid cursor-pointer bg-accent-mid/10 hover:text-red hover:bg-red/10"
-            : " hover:bg-accent-mid/10 hover:text-accent-mid")
+            ? " text-accent cursor-pointer bg-accent/10 enabled:hover:text-red enabled:hover:bg-red/10"
+            : " enabled:hover:bg-accent/10 enabled:hover:text-accent")
         }
         onClick={() => {
           if (isSelected) handleRemove(name);
           else selected[1]([...selected[0], name]);
           reset[1]([]);
         }}
-        onMouseEnter={() => paused[1](true)}
+        onMouseEnter={() => {
+          paused[1](true);
+          reset[1]([]);
+        }}
         onMouseLeave={() => paused[1](false)}
+        disabled={state[0] > 0}
       >
         {name}
       </button>
