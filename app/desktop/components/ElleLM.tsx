@@ -109,6 +109,15 @@ export default function ElleLM({
         }
       />
 
+      <p
+        className={
+          "transition-all duration-150 ease-in-out font-cormorant text-center pointer-events-none" +
+          (!selected.length ? " opacity-1" : " opacity-0")
+        }
+      >
+        Select one or more options above to learn more.
+      </p>
+
       <div className="transition-all duration-[2.5s] ease-in-out">
         {selected.map((name) => (
           <button

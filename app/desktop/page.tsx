@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import ElleLM from "./components/ElleLM";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { State } from "@/utils/types/state";
 
 // TODO Fade in intro animation
