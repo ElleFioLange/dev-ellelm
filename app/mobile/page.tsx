@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import ElleLM from "./components/ElleLM";
 import { State } from "@/utils/types/state";
 import _handleRemove from "@/utils/functions/handlers/handleRemove";
+import Nav from "../components/Nav";
 
 // TODO Use localStorage to recommend visitors to check out mobile site if they haven't visited it yet (bc it's just so good)
 
@@ -47,12 +47,10 @@ export default function Home() {
         <h2 className="z-10 relative text-right text-3xl overflow-x-auto shrink-0 whitespace-nowrap">
           Elle Fiorentino-Lange
         </h2>
-        <nav className="z-10 overflow-x-auto shrink-0 relative transition-all duration-500 ease-in-out flex flex-row-reverse gap-8 mb-4">
-          <Link href="#">Home</Link>
-          <Link href="#">Contact</Link>
-          <Link href="#">Portfolio</Link>
-          <Link href="#">Blog</Link>
-        </nav>
+        <Nav
+          reset={reset}
+          className="z-10 overflow-x-auto shrink-0 relative transition-all duration-500 ease-in-out gap-8 mb-4"
+        />
 
         <ElleLM
           selected={selected[0]}
@@ -76,7 +74,7 @@ export default function Home() {
         <Option name="Language Models" />
       </section>
 
-      <section className=" flex flex-col items-center mt-24">
+      <section className=" flex flex-col items-center mt-24 mb-[25%]">
         <h1 className="text-center">who knows</h1>
         <Option name="Javascript" />
         <Option name="Typescript" />
@@ -92,8 +90,6 @@ export default function Home() {
         <Option name="RAG LLMs" />
         <Option name="Vector Databases" />
       </section>
-
-      <div className="h-1/2" />
     </main>
   );
 }

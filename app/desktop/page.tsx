@@ -5,6 +5,7 @@ import ElleLM from "./components/ElleLM";
 import { useState } from "react";
 import { State } from "@/utils/types/state";
 import _handleRemove from "@/utils/functions/handlers/handleRemove";
+import Nav from "../components/Nav";
 
 export default function Home() {
   const selected = useState<Array<string>>([]);
@@ -113,19 +114,7 @@ export default function Home() {
         </h2>
       </section>
 
-      <nav
-        className="font-cormorant flex flex-row-reverse gap-12 text-lg"
-        onMouseEnter={() => {
-          paused[1](true);
-          reset[1]([]);
-        }}
-        onMouseLeave={() => paused[1](false)}
-      >
-        <Link href="#">Home</Link>
-        <Link href="#">Contact</Link>
-        <Link href="#">Portfolio</Link>
-        <Link href="#">Blog</Link>
-      </nav>
+      <Nav paused={paused} reset={reset} className="gap-12 text-lg" />
     </main>
   );
 }
