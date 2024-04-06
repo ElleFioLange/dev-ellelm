@@ -6,7 +6,6 @@ import { useState } from "react";
 import { State } from "@/utils/types/state";
 import _handleRemove from "@/utils/functions/handlers/handleRemove";
 
-// TODO Fade in intro animation
 export default function Home() {
   const selected = useState<Array<string>>([]);
   const state = useState<State>(0);

@@ -4,6 +4,7 @@ import { State } from "@/utils/types/state";
 import _handleExplain from "@/utils/functions/handlers/handleExplain";
 import _handleClose from "@/utils/functions/handlers/handleClose";
 import _handleCancel from "@/utils/functions/handlers/handleCancel";
+import _handleReturn from "@/utils/functions/handlers/handleReturn";
 
 export default function ElleLM({
   selected,
@@ -25,7 +26,7 @@ export default function ElleLM({
   const ref = useRef<HTMLParagraphElement>(null);
 
   const matchesPrev =
-    prevExplained.length &&
+    prevExplained[0].length &&
     JSON.stringify([...selected].sort()) ===
       JSON.stringify([...prevExplained[0]].sort());
 
@@ -38,16 +39,7 @@ export default function ElleLM({
 
   const handleClose = () => _handleClose({ ref, state, reset });
 
-  const handleReturn = () => {
-    state[1](2); // Finished
-    setTimeout(() => {
-      ref.current?.classList.add("animate-fade-in");
-      if (ref.current) ref.current.textContent = text[0];
-      setTimeout(() => {
-        ref.current?.classList.remove("animate-fade-in");
-      }, 1000);
-    }, 1000);
-  };
+  const handleReturn = () => _handleReturn({ state, ref, text });
 
   return (
     <section className="ellelm-grid overflow-hidden">
@@ -60,16 +52,14 @@ export default function ElleLM({
       />
       {/* ---------------------------- */}
 
-      {/* TODO Add "Telling you about" state when explaining (?) */}
       <h1 className={selected.length ? "" : " opacity-30"}>Tell me about </h1>
 
       <button
-        //  TODO transition height add overflow-hidden
         className={
           "relative text-xl w-min px-2 place-self-end transition-all duration-150 ease-in-out" +
           ((state[0] > 0 && state[0] < 4) || matchesPrev
-            ? " opacity-1"
-            : " opacity-0") +
+            ? " opacity-1 translate-y-0"
+            : " opacity-0 translate-y-8") +
           (state[0] > 0 && state[0] < 4
             ? " text-red enabled:hover:bg-red/10"
             : " text-green enabled:hover:bg-green/10")
@@ -126,7 +116,6 @@ export default function ElleLM({
         ))}
       </div>
 
-      {/* TODO Make previous text viewable after close */}
       <p
         className="font-cormorant pr-10 mr-2 mt-2 mb-2 pb-64 pl-6 relative whitespace-pre-wrap overflow-auto"
         ref={ref}

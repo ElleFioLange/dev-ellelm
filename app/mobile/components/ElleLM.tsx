@@ -4,6 +4,7 @@ import { State } from "@/utils/types/state";
 import _handleExplain from "@/utils/functions/handlers/handleExplain";
 import _handleCancel from "@/utils/functions/handlers/handleCancel";
 import _handleClose from "@/utils/functions/handlers/handleClose";
+import _handleReturn from "@/utils/functions/handlers/handleReturn";
 
 export default function ElleLM({
   selected,
@@ -30,11 +31,6 @@ export default function ElleLM({
 
   const ref = useRef<HTMLParagraphElement>(null);
 
-  const matchesPrev =
-    prevExplained.length &&
-    JSON.stringify([...selected].sort()) ===
-      JSON.stringify([...prevExplained[0]].sort());
-
   useEffect(() => {
     if (selected.length) {
       if (selState[0] === 0) selState[1](1); // Preview
@@ -42,6 +38,11 @@ export default function ElleLM({
       selState[1](0); // Closed
     }
   }, [selected]);
+
+  const matchesPrev =
+    prevExplained[0].length &&
+    JSON.stringify([...selected].sort()) ===
+      JSON.stringify([...prevExplained[0]].sort());
 
   const handleExplain =
     // Uncomment to disable GPT inference
@@ -60,6 +61,8 @@ export default function ElleLM({
   const handleCancel = () => _handleCancel({ reader, state });
 
   const handleClose = () => _handleClose({ ref, state, reset, selState });
+
+  const handleReturn = () => _handleReturn({ state, ref, text, selState });
 
   return (
     <section
@@ -236,16 +239,22 @@ export default function ElleLM({
         ref={ref}
       />
       <button
-        onClick={state[0] > 1 ? handleClose : handleCancel}
+        onClick={() => {
+          if (state[0] > 1) handleClose();
+          else if (state[0] === 1) handleCancel();
+          else handleReturn();
+        }}
         className={
           "w-full py-2 c-invert fixed bottom-0 left-0 transition-all duration-500 text-4xl text-center" +
-          (state[0] > 0 && state[0] < 4
+          ((state[0] > 0 && state[0] < 4) || matchesPrev
             ? " opacity-1 translate-y-0"
             : " opacity-0 translate-y-8")
         }
-        disabled={state[0] === 0 || state[0] === 4}
+        disabled={(state[0] === 0 && !matchesPrev) || state[0] === 4}
       >
-        {state[0] > 1 ? "Close" : "Cancel"}
+        {state[0] > 1 && state[0] < 4 ? "Close" : ""}
+        {state[0] === 1 ? "Cancel" : ""}
+        {(state[0] === 0 || state[0] === 4) && matchesPrev ? "Return" : ""}
       </button>
     </section>
   );
