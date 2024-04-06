@@ -111,7 +111,7 @@ export default function ElleLM({
 
       <p
         className={
-          "transition-all duration-150 ease-in-out font-cormorant text-center pointer-events-none" +
+          "transition-all duration-150 ease-in-out font-cormorant pl-2 pointer-events-none" +
           (!selected.length ? " opacity-1" : " opacity-0")
         }
       >
@@ -140,7 +140,7 @@ export default function ElleLM({
 
       {/* TODO Make previous text viewable after close */}
       <p
-        className="font-cormorant pr-12 pt-2 pb-64 pl-8 whitespace-pre-wrap overflow-auto h-full"
+        className="font-cormorant pr-10 mr-2 mt-2 mb-2 pb-64 pl-6 relative whitespace-pre-wrap overflow-auto"
         ref={ref}
       />
     </section>

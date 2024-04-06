@@ -1,23 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useState } from "react";
 import ElleLM from "./components/ElleLM";
 import { State } from "@/utils/types/state";
+import _handleRemove from "@/utils/functions/handlers/handleRemove";
 
 // TODO Use localStorage to recommend visitors to check out mobile site if they haven't visited it yet (bc it's just so good)
-// TODO Increase m-top so selection preview doesn't overlap with "I'm a"
 
 export default function Home() {
-  const loadingAnim = useState(true);
   const selected = useState<Array<string>>([]);
   const state = useState<State>(0);
 
   const reset = useState([]);
-
-  useEffect(() => {
-    setTimeout(() => loadingAnim[1](false), 1500);
-  }, []);
 
   const Option = ({ name }: { name: string }) => {
     const isSelected = selected[0].includes(name);
@@ -38,17 +33,12 @@ export default function Home() {
     );
   };
 
-  const handleRemove = (name: string) => {
-    selected[1](selected[0].filter((option) => option !== name));
-    reset[1]([]);
-  };
+  const handleRemove = (name: string) =>
+    _handleRemove({ name, selected, reset });
 
   return (
     <main
-      className={
-        "pt-0 w-screen max-w-screen h-screen max-h-screen no-scrollbar overflow-auto" +
-        (loadingAnim[0] ? " pointer-events-none" : "")
-      }
+      className="animate-fade-in pt-0 w-screen max-w-screen h-screen max-h-screen no-scrollbar overflow-auto"
       onScroll={() => reset[1]([])}
     >
       <header className="z-10 fixed w-full px-4 pt-6 left-0 top-0 max-h-screen flex flex-col bg-bg">

@@ -4,6 +4,7 @@ import Link from "next/link";
 import ElleLM from "./components/ElleLM";
 import { useState } from "react";
 import { State } from "@/utils/types/state";
+import _handleRemove from "@/utils/functions/handlers/handleRemove";
 
 // TODO Fade in intro animation
 export default function Home() {
@@ -35,13 +36,11 @@ export default function Home() {
     );
   };
 
-  const handleRemove = (name: string) => {
-    selected[1](selected[0].filter((option) => option !== name));
-    reset[1]([]);
-  };
+  const handleRemove = (name: string) =>
+    _handleRemove({ name, selected, reset });
 
   return (
-    <main className="home-grid gap-1 w-screen h-screen max-w-screen max-h-screen overflow-hidden p-8">
+    <main className="animate-fade-in home-grid gap-1 w-screen h-screen max-w-screen max-h-screen overflow-hidden p-8">
       <section
         onMouseEnter={() => {
           if (!paused[0]) {
@@ -114,9 +113,9 @@ export default function Home() {
           Fiorentino-Lange
         </h2>
       </section>
-      {/* // TODO Font cormorant */}
+
       <nav
-        className="flex flex-row-reverse gap-12 text-lg"
+        className="font-cormorant flex flex-row-reverse gap-12 text-lg"
         onMouseEnter={() => {
           paused[1](true);
           reset[1]([]);

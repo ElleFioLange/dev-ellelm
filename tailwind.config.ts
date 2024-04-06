@@ -26,10 +26,7 @@ const config: Config = {
       },
       animation: {
         "fade-in": "fade-in 1s ease-in-out",
-        "fade-in-quick": "fade-in 0.25s ease-in-out",
         "fade-out": "fade-out 1s ease-in-out",
-        "fade-out-quick": "fade-out 0.25s ease-in-out",
-        "scroll-up": "scroll-up 1.5s cubic-bezier(.64,.28,.56,1.11)",
       },
       keyframes: {
         "fade-in": {
@@ -39,21 +36,6 @@ const config: Config = {
         "fade-out": {
           "0%": { opacity: "1" },
           "100%": { opacity: "0" },
-        },
-        "loading-bounce": {
-          "0%, 60%, 100%": {
-            transform: "translateY(0%)",
-            "animation-timing-function": "cubic-bezier(1, -1, 0.65, 1)",
-          },
-          "40%": {
-            transform: "translateY(-7%)",
-            "animation-timing-function": "cubic-bezier(0.8, 0, 1, 1)",
-          },
-        },
-        "scroll-up": {
-          "0%": { marginTop: "100vh" },
-          "50%": { marginTop: "100vh" },
-          "100%": { marginTop: "12rem" },
         },
       },
     },
