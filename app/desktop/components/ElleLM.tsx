@@ -1,6 +1,9 @@
 import { Dispatch, useMemo, useRef, useState } from "react";
 import Loading from "@/app/components/Loading";
 import { State } from "@/utils/types/state";
+import _handleExplain from "@/utils/functions/handlers/handleExplain";
+import _handleClose from "@/utils/functions/handlers/handleClose";
+import _handleCancel from "@/utils/functions/handlers/handleCancel";
 
 export default function ElleLM({
   selected,
@@ -24,67 +27,57 @@ export default function ElleLM({
   const handleExplain =
     // Uncomment to disable GPT inference
     // () => {};
-    async () => {
-      state[1](1); // Streaming
+    () => _handleExplain({ prevExplained, selected, state, reader, ref, text });
+  async () => {
+    const response = await fetch("/api/explain", {
+      method: "POST",
+      body: JSON.stringify({ selected }),
+    });
+    state[1](1); // Streaming
 
-      const response = await fetch("/api/explain", {
-        method: "POST",
-        body: JSON.stringify({ selected }),
-      });
+    const _reader = response.body?.getReader();
 
-      const _reader = response.body?.getReader();
+    if (!_reader) return;
 
-      if (!_reader) return;
+    reader[1](_reader);
 
-      reader[1](_reader);
-
-      let result = "";
-      while (true) {
-        const { done, value } = await _reader.read();
-        if (done) break;
-        const _text = new TextDecoder().decode(value);
-        if (_text.includes("errno")) {
-          // TODO Error handling
-          break;
-        }
-        const add = document.createElement("span");
-        add.innerText = _text;
-        add.className = "animate-fade-in";
-        ref.current?.appendChild(add);
-        result += _text;
+    let result = "";
+    while (true) {
+      const { done, value } = await _reader.read();
+      if (done) break;
+      const _text = new TextDecoder().decode(value);
+      if (_text.includes("errno")) {
+        // TODO Error handling
+        break;
       }
+      const add = document.createElement("span");
+      add.innerText = _text;
+      add.className = "animate-fade-in";
+      ref.current?.appendChild(add);
+      result += _text;
+    }
 
-      text[1](result);
-      state[1](2); // Finished
-      prevExplained[1]([...selected]);
-    };
-
-  const handleCancel = () => {
-    reader[0]?.cancel();
-    state[1](3); // Canceled
+    text[1](result);
+    state[1](2); // Finished
+    prevExplained[1]([...selected]);
   };
 
-  // TODO Consolidate handlers across desktop and mobile into util file
+  const handleCancel = () => _handleCancel({ reader, state });
 
-  const handleClose = () => {
-    ref.current?.classList.add("animate-fade-out");
-    state[1](4); // Closing
-    reset[1]([]);
-    setTimeout(() => {
-      if (ref.current) ref.current.textContent = "";
-      ref.current?.classList.remove("animate-fade-out");
-      state[1](0); // Idle
-    }, 1000);
-  };
+  const handleClose = () => _handleClose({ ref, state, reset });
 
   return (
     <section className="ellelm-grid overflow-hidden">
+      {/* --- Paragraph background --- */}
       <div
         className={
-          "transition-all duration-[2.5s] ease-in-out bg-accent-bg" +
+          "transition-all place-self-end w-full duration-[2.5s] ease-in-out bg-accent-bg" +
           (state[0] > 0 ? " h-full" : " h-0")
         }
       />
+      {/* ---------------------------- */}
+
+      {/* TODO Add "Telling you about" state when explaining (?) */}
       <h1 className={selected.length ? "" : " opacity-30"}>Tell me about </h1>
 
       <button

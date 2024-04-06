@@ -6,6 +6,7 @@ import ElleLM from "./components/ElleLM";
 import { State } from "@/utils/types/state";
 
 // TODO Use localStorage to recommend visitors to check out mobile site if they haven't visited it yet (bc it's just so good)
+// TODO Increase m-top so selection preview doesn't overlap with "I'm a"
 
 export default function Home() {
   const loadingAnim = useState(true);

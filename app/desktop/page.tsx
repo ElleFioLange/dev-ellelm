@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import ElleLM from "./components/ElleLM";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { State } from "@/utils/types/state";
 
+// TODO Fade in intro animation
 export default function Home() {
   const selected = useState<Array<string>>([]);
   const state = useState<State>(0);
@@ -13,6 +14,7 @@ export default function Home() {
 
   const Option = ({ name }: { name: string }) => {
     const isSelected = selected[0].includes(name);
+
     return (
       <button
         className={
@@ -42,11 +44,13 @@ export default function Home() {
     <main className="home-grid gap-1 w-screen h-screen max-w-screen max-h-screen overflow-hidden p-8">
       <section
         onMouseEnter={() => {
-          paused[1](true);
-          reset[1]([]);
+          if (!paused[0]) {
+            paused[1](true);
+            reset[1]([]);
+          }
         }}
         onMouseLeave={() => {
-          paused[1](false);
+          if (paused[0]) paused[1](false);
         }}
       >
         <h1>I'm a</h1>
@@ -54,14 +58,15 @@ export default function Home() {
         <Option name="Designer" />
         <Option name="Engineer" />
       </section>
-
       <section
         onMouseEnter={() => {
-          paused[1](true);
-          reset[1]([]);
+          if (!paused[0]) {
+            paused[1](true);
+            reset[1]([]);
+          }
         }}
         onMouseLeave={() => {
-          paused[1](false);
+          if (paused[0]) paused[1](false);
         }}
       >
         <h1>interested in</h1>
@@ -69,14 +74,15 @@ export default function Home() {
         <Option name="Typography" />
         <Option name="Language Models" />
       </section>
-
       <section
         onMouseEnter={() => {
-          paused[1](true);
-          reset[1]([]);
+          if (!paused[0]) {
+            paused[1](true);
+            reset[1]([]);
+          }
         }}
         onMouseLeave={() => {
-          paused[1](false);
+          if (paused[0]) paused[1](false);
         }}
       >
         <h1>who knows</h1>
@@ -94,7 +100,6 @@ export default function Home() {
         <Option name="RAG LLMs" />
         <Option name="Vector Databases" />
       </section>
-
       <ElleLM
         selected={selected[0]}
         reset={reset}
@@ -102,7 +107,6 @@ export default function Home() {
         state={state}
         paused={paused}
       />
-
       <section className="place-self-end">
         <h2 className="text-right leading-5 mb-8">
           <span className="mr-2 leading-5">Elle</span>
@@ -110,7 +114,7 @@ export default function Home() {
           Fiorentino-Lange
         </h2>
       </section>
-
+      {/* // TODO Font cormorant */}
       <nav
         className="flex flex-row-reverse gap-12 text-lg"
         onMouseEnter={() => {

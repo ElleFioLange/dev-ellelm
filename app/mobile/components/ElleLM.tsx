@@ -1,6 +1,7 @@
 import { Dispatch, useEffect, useMemo, useRef, useState } from "react";
 import Loading from "../../components/Loading";
 import { State } from "@/utils/types/state";
+import _handleExplain from "@/utils/functions/handlers/handleExplain";
 
 export default function ElleLM({
   selected,
@@ -38,39 +39,49 @@ export default function ElleLM({
   const handleExplain =
     // Uncomment to disable GPT inference
     // () => {};
-    async () => {
-      // Use timeout because Loading component resets when prevExplained is updated
-      setTimeout(() => prevExplained[1]([...selected]), 1000);
-
-      const response = await fetch("/api/explain", {
-        method: "POST",
-        body: JSON.stringify({ selected }),
+    () =>
+      _handleExplain({
+        prevExplained,
+        selected,
+        selState,
+        state,
+        reader,
+        ref,
+        text,
       });
+  async () => {
+    // Use timeout because Loading component resets when prevExplained is updated
+    setTimeout(() => prevExplained[1]([...selected]), 1000);
 
-      selState[1](0); // Closed
-      state[1](1); // Streaming
+    const response = await fetch("/api/explain", {
+      method: "POST",
+      body: JSON.stringify({ selected }),
+    });
 
-      const _reader = response.body?.getReader();
+    selState[1](0); // Closed
+    state[1](1); // Streaming
 
-      if (!_reader) return;
+    const _reader = response.body?.getReader();
 
-      reader[1](_reader);
+    if (!_reader) return;
 
-      let result = "";
-      while (true) {
-        const { done, value } = await _reader.read();
-        if (done) break;
-        const _text = new TextDecoder().decode(value);
-        const add = document.createElement("span");
-        add.innerText = _text;
-        add.className = "animate-fade-in";
-        ref.current?.appendChild(add);
-        result += _text;
-      }
+    reader[1](_reader);
 
-      text[1](result);
-      state[1](2); // Finished
-    };
+    let result = "";
+    while (true) {
+      const { done, value } = await _reader.read();
+      if (done) break;
+      const _text = new TextDecoder().decode(value);
+      const add = document.createElement("span");
+      add.innerText = _text;
+      add.className = "animate-fade-in";
+      ref.current?.appendChild(add);
+      result += _text;
+    }
+
+    text[1](result);
+    state[1](2); // Finished
+  };
 
   const handleCancel = () => {
     reader[0]?.cancel();
