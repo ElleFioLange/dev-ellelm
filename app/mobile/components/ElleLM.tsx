@@ -137,7 +137,8 @@ export default function ElleLM({
             (prevExplained.length &&
               JSON.stringify(selected) === JSON.stringify(prevExplained[0])) ||
             selState[0] === 2 ||
-            state[0] > 0
+            state[0] > 0 ||
+            !selected.length
           }
         />
       </div>

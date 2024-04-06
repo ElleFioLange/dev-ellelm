@@ -6,8 +6,8 @@
   html {
     --baby-powder: 251 249 244;
     --raisin-black: 32 34 46;
-    --onyx: 60 61 71;
-    --platinum: 224 223 220;
+    --hookers-green: 93 119 101;
+    --tea-green: 202 227 200;
     --celadon: 100 180 105;
     --amaranth: 221 44 76;
 
@@ -17,8 +17,8 @@
     --green: var(--celadon);
     --red: var(--amaranth);
 
-    --accent-fg: var(--onyx);
-    --accent-bg: var(--platinum);
+    --accent-fg: var(--hookers-green);
+    --accent-bg: var(--tea-green);
 
     scrollbar-color: rgb(var(--fg)) #00000000;
 
@@ -29,8 +29,8 @@
     html {
       --fg: var(--baby-powder);
       --bg: var(--raisin-black);
-      --accent-fg: var(--platinum);
-      --accent-bg: var(--onyx);
+      --accent-fg: var(--tea-green);
+      --accent-bg: var(--hookers-green);
     }
   }
 
