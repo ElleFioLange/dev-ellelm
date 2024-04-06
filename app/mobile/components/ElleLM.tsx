@@ -2,6 +2,8 @@ import { Dispatch, useEffect, useMemo, useRef, useState } from "react";
 import Loading from "../../components/Loading";
 import { State } from "@/utils/types/state";
 import _handleExplain from "@/utils/functions/handlers/handleExplain";
+import _handleCancel from "@/utils/functions/handlers/handleCancel";
+import _handleClose from "@/utils/functions/handlers/handleClose";
 
 export default function ElleLM({
   selected,
@@ -15,7 +17,7 @@ export default function ElleLM({
   reset: [never[], Dispatch<never[]>];
   state: [State, Dispatch<State>];
 }) {
-  // TODO Store text
+  // TODO Store all past inferences (object with keys as sorted selected items)
   const text = useState("");
   const reader = useState<ReadableStreamReader<Uint8Array>>();
   // Selected state
@@ -27,6 +29,11 @@ export default function ElleLM({
   const prevExplained = useState<string[]>([]);
 
   const ref = useRef<HTMLParagraphElement>(null);
+
+  const matchesPrev =
+    prevExplained.length &&
+    JSON.stringify([...selected].sort()) ===
+      JSON.stringify([...prevExplained[0]].sort());
 
   useEffect(() => {
     if (selected.length) {
@@ -49,58 +56,10 @@ export default function ElleLM({
         ref,
         text,
       });
-  async () => {
-    // Use timeout because Loading component resets when prevExplained is updated
-    setTimeout(() => prevExplained[1]([...selected]), 1000);
 
-    const response = await fetch("/api/explain", {
-      method: "POST",
-      body: JSON.stringify({ selected }),
-    });
+  const handleCancel = () => _handleCancel({ reader, state });
 
-    selState[1](0); // Closed
-    state[1](1); // Streaming
-
-    const _reader = response.body?.getReader();
-
-    if (!_reader) return;
-
-    reader[1](_reader);
-
-    let result = "";
-    while (true) {
-      const { done, value } = await _reader.read();
-      if (done) break;
-      const _text = new TextDecoder().decode(value);
-      const add = document.createElement("span");
-      add.innerText = _text;
-      add.className = "animate-fade-in";
-      ref.current?.appendChild(add);
-      result += _text;
-    }
-
-    text[1](result);
-    state[1](2); // Finished
-  };
-
-  const handleCancel = () => {
-    reader[0]?.cancel();
-    state[1](3); // Canceled
-  };
-
-  const handleClose = () => {
-    ref.current?.classList.add("animate-fade-out");
-    state[1](4); // Closing
-    reset[1]([]);
-    setTimeout(() => {
-      if (ref.current) ref.current.textContent = "";
-      ref.current?.classList.remove("animate-fade-out");
-      state[1](0); // Idle
-      setTimeout(() => {
-        selState[1](1); // Preview
-      }, 1000);
-    }, 950);
-  };
+  const handleClose = () => _handleClose({ ref, state, reset, selState });
 
   return (
     <section
@@ -145,11 +104,7 @@ export default function ElleLM({
           reset={reset[0]}
           className="col-span-2 z-10"
           paused={
-            (prevExplained.length &&
-              JSON.stringify(selected) === JSON.stringify(prevExplained[0])) ||
-            selState[0] === 2 ||
-            state[0] > 0 ||
-            !selected.length
+            matchesPrev || selState[0] === 2 || state[0] > 0 || !selected.length
           }
         />
       </div>

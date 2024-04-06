@@ -24,47 +24,30 @@ export default function ElleLM({
 
   const ref = useRef<HTMLParagraphElement>(null);
 
+  const matchesPrev =
+    prevExplained.length &&
+    JSON.stringify([...selected].sort()) ===
+      JSON.stringify([...prevExplained[0]].sort());
+
   const handleExplain =
     // Uncomment to disable GPT inference
     // () => {};
     () => _handleExplain({ prevExplained, selected, state, reader, ref, text });
-  async () => {
-    const response = await fetch("/api/explain", {
-      method: "POST",
-      body: JSON.stringify({ selected }),
-    });
-    state[1](1); // Streaming
-
-    const _reader = response.body?.getReader();
-
-    if (!_reader) return;
-
-    reader[1](_reader);
-
-    let result = "";
-    while (true) {
-      const { done, value } = await _reader.read();
-      if (done) break;
-      const _text = new TextDecoder().decode(value);
-      if (_text.includes("errno")) {
-        // TODO Error handling
-        break;
-      }
-      const add = document.createElement("span");
-      add.innerText = _text;
-      add.className = "animate-fade-in";
-      ref.current?.appendChild(add);
-      result += _text;
-    }
-
-    text[1](result);
-    state[1](2); // Finished
-    prevExplained[1]([...selected]);
-  };
 
   const handleCancel = () => _handleCancel({ reader, state });
 
   const handleClose = () => _handleClose({ ref, state, reset });
+
+  const handleReturn = () => {
+    state[1](2); // Finished
+    setTimeout(() => {
+      ref.current?.classList.add("animate-fade-in");
+      if (ref.current) ref.current.textContent = text[0];
+      setTimeout(() => {
+        ref.current?.classList.remove("animate-fade-in");
+      }, 1000);
+    }, 1000);
+  };
 
   return (
     <section className="ellelm-grid overflow-hidden">
@@ -83,13 +66,24 @@ export default function ElleLM({
       <button
         //  TODO transition height add overflow-hidden
         className={
-          "relative text-xl w-min px-2 place-self-end text-red hover:bg-red/10 transition-all duration-150 ease-in-out" +
-          (state[0] > 0 && state[0] < 4 ? " opacity-1" : " opacity-0")
+          "relative text-xl w-min px-2 place-self-end transition-all duration-150 ease-in-out" +
+          ((state[0] > 0 && state[0] < 4) || matchesPrev
+            ? " opacity-1"
+            : " opacity-0") +
+          (state[0] > 0 && state[0] < 4
+            ? " text-red enabled:hover:bg-red/10"
+            : " text-green enabled:hover:bg-green/10")
         }
-        onClick={state[0] > 1 ? handleClose : handleCancel}
-        disabled={state[0] === 0 || state[0] === 4}
+        onClick={() => {
+          if (state[0] > 1) handleClose();
+          else if (state[0] === 1) handleCancel();
+          else handleReturn();
+        }}
+        disabled={(state[0] === 0 && !matchesPrev) || state[0] === 4}
       >
-        {state[0] > 1 ? "Close" : "Cancel"}
+        {state[0] > 1 && state[0] < 4 ? "Close" : ""}
+        {state[0] === 1 ? "Cancel" : ""}
+        {(state[0] === 0 || state[0] === 4) && matchesPrev ? "Return" : ""}
       </button>
 
       <Loading
@@ -99,25 +93,19 @@ export default function ElleLM({
         onLoad={handleExplain}
         reset={reset}
         className="col-span-2"
-        paused={
-          (prevExplained.length &&
-            JSON.stringify([...selected].sort()) ===
-              JSON.stringify([...prevExplained[0]].sort())) ||
-          paused[0] ||
-          state[0] > 0 ||
-          !selected.length
-        }
+        paused={matchesPrev || paused[0] || state[0] > 0 || !selected.length}
       />
 
       <p
         className={
-          "transition-all duration-150 ease-in-out font-cormorant pl-2 pointer-events-none" +
+          "transition-all duration-150 ease-in-out font-cormorant mt-1 ml-1 pointer-events-none" +
           (!selected.length ? " opacity-1" : " opacity-0")
         }
       >
         Select one or more options above to learn more.
       </p>
 
+      {/* TODO Add hover states in case mobile is used with mouse (iPad) */}
       <div className="transition-all duration-[2.5s] ease-in-out">
         {selected.map((name) => (
           <button
