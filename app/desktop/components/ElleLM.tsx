@@ -21,20 +21,16 @@ export default function ElleLM({
 
   const ref = useRef<HTMLParagraphElement>(null);
 
-  // TODO Fix bug with repeated inferences
   const handleExplain =
     // Uncomment to disable GPT inference
     // () => {};
     async () => {
-      // Use timeout because Loading component resets when prevExplained is updated
-      setTimeout(() => prevExplained[1]([...selected]), 1000);
+      state[1](1); // Streaming
 
       const response = await fetch("/api/explain", {
         method: "POST",
         body: JSON.stringify({ selected }),
       });
-
-      state[1](1); // Streaming
 
       const _reader = response.body?.getReader();
 
@@ -60,6 +56,7 @@ export default function ElleLM({
 
       text[1](result);
       state[1](2); // Finished
+      prevExplained[1]([...selected]);
     };
 
   const handleCancel = () => {
@@ -84,17 +81,12 @@ export default function ElleLM({
     <section className="ellelm-grid overflow-hidden">
       <div
         className={
-          "box-content left-0 bottom-0 w-full transition-all duration-[2.5s] border-fg ease-in-out c-invert" +
-          (state[0] > 0 ? " h-full border-t-2" : " h-0 border-t-0")
-        }
-      />
-      <div
-        className={
-          "box-content left-0 bottom-0 w-full transition-all duration-[2.5s] border-fg ease-in-out bg-accent/10" +
-          (state[0] > 0 ? " h-full border-t-2" : " h-0 border-t-0")
+          "transition-all duration-[2.5s] ease-in-out bg-accent-bg" +
+          (state[0] > 0 ? " h-full" : " h-0")
         }
       />
       <h1 className={selected.length ? "" : " opacity-30"}>Tell me about </h1>
+
       <button
         //  TODO transition height add overflow-hidden
         className={
@@ -107,8 +99,6 @@ export default function ElleLM({
         {state[0] > 1 ? "Close" : "Cancel"}
       </button>
 
-      {/* <button className={""} /> */}
-
       <Loading
         duration={3}
         delay={1.5}
@@ -118,24 +108,26 @@ export default function ElleLM({
         className="col-span-2"
         paused={
           (prevExplained.length &&
-            JSON.stringify(selected) === JSON.stringify(prevExplained[0])) ||
+            JSON.stringify([...selected].sort()) ===
+              JSON.stringify([...prevExplained[0]].sort())) ||
           paused[0] ||
-          state[0] > 0
+          state[0] > 0 ||
+          !selected.length
         }
       />
 
-      <div>
+      <div className="transition-all duration-[2.5s] ease-in-out">
         {selected.map((name) => (
           <button
             key={name}
             className={
-              "text-lg px-2 w-full text-left cursor-pointer transition-all duration-150 ease-in-out block hover:text-red hover:bg-red/10" +
-              (state[0] > 0 ? " text-bg" : "")
+              "text-lg opacity-1 disabled:opacity-30 pl-1 pr-2 w-full text-left cursor-pointer transition-all duration-150 ease-in-out block enabled:hover:text-red enabled:hover:bg-red/10"
             }
             onClick={() => {
               handleRemove(name);
               paused[1](false);
             }}
+            disabled={state[0] > 0}
             onMouseEnter={() => paused[1](true)}
             onMouseLeave={() => paused[1](false)}
           >
@@ -146,10 +138,7 @@ export default function ElleLM({
 
       {/* TODO Make previous text viewable after close */}
       <p
-        className={
-          "font-cormorant ml-4 whitespace-pre-wrap overflow-auto h-full" +
-          (state[0] > 0 ? " pr-12 pt-2 pb-64" : " pr-0 pt-1 pb-0")
-        }
+        className="font-cormorant pr-12 pt-2 pb-64 pl-8 whitespace-pre-wrap overflow-auto h-full"
         ref={ref}
       />
     </section>

@@ -4,19 +4,21 @@
 
 @layer base {
   html {
-    --light: 251 249 244;
-    --dark: 32 34 46;
+    --baby-powder: 251 249 244;
+    --raisin-black: 32 34 46;
+    --onyx: 60 61 71;
+    --platinum: 224 223 220;
+    --celadon: 100 180 105;
+    --amaranth: 221 44 76;
 
-    --green: 100 180 105;
-    --red: 221 44 76;
-    /* --eggplant: 56 38 45;
-    --rose: 244 198 202; */
-    /* Foreground */
-    --fg: var(--dark);
-    /* Background */
-    --bg: var(--light);
-    /* Accent */
-    --accent: var(--green);
+    --fg: var(--raisin-black);
+    --bg: var(--baby-powder);
+
+    --green: var(--celadon);
+    --red: var(--amaranth);
+
+    --accent-fg: var(--onyx);
+    --accent-bg: var(--platinum);
 
     scrollbar-color: rgb(var(--fg)) #00000000;
 
@@ -25,10 +27,10 @@
 
   @media (prefers-color-scheme: dark) {
     html {
-      /* Foreground */
-      --fg: var(--light);
-      /* Background */
-      --bg: var(--dark);
+      --fg: var(--baby-powder);
+      --bg: var(--raisin-black);
+      --accent-fg: var(--platinum);
+      --accent-bg: var(--onyx);
     }
   }
 
@@ -91,33 +93,32 @@
       "c d" 1fr / auto 1fr;
   }
 
-  .ellelm-grid > div:nth-child(1) {
-    grid-column: 1 / 2;
-    grid-row: 2 / 4;
-  }
+  /* .ellelm-grid > div:nth-child(1) {
+    grid-area: c;
+  } */
 
-  .ellelm-grid > div:nth-child(2) {
+  .ellelm-grid > div:nth-child(1) {
     grid-column: 2 / 3;
     grid-row: 2 / 4;
   }
 
-  .ellelm-grid > h1:nth-child(3) {
+  .ellelm-grid > h1:nth-child(2) {
     grid-area: a;
   }
 
-  .ellelm-grid > button:nth-child(4) {
+  .ellelm-grid > button:nth-child(3) {
     grid-area: a;
   }
 
-  .ellelm-grid > div:nth-child(5) {
+  .ellelm-grid > div:nth-child(4) {
     grid-area: b;
   }
 
-  .ellelm-grid > div:nth-child(6) {
+  .ellelm-grid > div:nth-child(5) {
     grid-area: c;
   }
 
-  .ellelm-grid > p:nth-child(7) {
+  .ellelm-grid > p:nth-child(6) {
     grid-area: d;
   }
 }

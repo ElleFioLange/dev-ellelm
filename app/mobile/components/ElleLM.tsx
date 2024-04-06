@@ -100,7 +100,7 @@ export default function ElleLM({
     >
       <div
         className={
-          "fixed box-content left-0 bottom-0 w-screen transition-all duration-[2.5s] border-fg ease-in-out bg-accent/10" +
+          "fixed box-content left-0 bottom-0 w-screen transition-all duration-[2.5s] border-fg ease-in-out bg-accent-bg" +
           (state[0] > 0 ? " border-t-2" : " border-t-0")
         }
         style={{
@@ -261,7 +261,6 @@ export default function ElleLM({
         />
       </div>
 
-      {/* TODO Use state to manage expand and hide/show of cancel/close button */}
       <p
         className={
           "font-cormorant text-justify no-scrollbar transition-all text-base duration-300 ease-in-out w-full max-h-full relative whitespace-pre-wrap overflow-auto grow overscroll-none" +

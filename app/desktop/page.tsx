@@ -14,24 +14,18 @@ export default function Home() {
   const Option = ({ name }: { name: string }) => {
     const isSelected = selected[0].includes(name);
     return (
-      // TODO Fade in background hover
       <button
         className={
-          "text-lg pl-1 block w-full transition-all duration-150 ease-in-out text-left" +
+          "text-lg pl-1 opacity-1 disabled:opacity-30 bg-bg block w-full transition-all duration-300 ease-in-out text-left" +
           (isSelected
-            ? " text-accent cursor-pointer bg-accent/10 enabled:hover:text-red enabled:hover:bg-red/10"
-            : " enabled:hover:bg-accent/10 enabled:hover:text-accent")
+            ? " text-green cursor-pointer bg-green/10 enabled:hover:text-red enabled:hover:bg-red/10"
+            : " enabled:hover:bg-green/10 enabled:hover:text-green")
         }
         onClick={() => {
           if (isSelected) handleRemove(name);
           else selected[1]([...selected[0], name]);
           reset[1]([]);
         }}
-        onMouseEnter={() => {
-          paused[1](true);
-          reset[1]([]);
-        }}
-        onMouseLeave={() => paused[1](false)}
         disabled={state[0] > 0}
       >
         {name}
@@ -46,21 +40,45 @@ export default function Home() {
 
   return (
     <main className="home-grid gap-1 w-screen h-screen max-w-screen max-h-screen overflow-hidden p-8">
-      <section>
+      <section
+        onMouseEnter={() => {
+          paused[1](true);
+          reset[1]([]);
+        }}
+        onMouseLeave={() => {
+          paused[1](false);
+        }}
+      >
         <h1>I'm a</h1>
         <Option name="Developer" />
         <Option name="Designer" />
         <Option name="Engineer" />
       </section>
 
-      <section>
+      <section
+        onMouseEnter={() => {
+          paused[1](true);
+          reset[1]([]);
+        }}
+        onMouseLeave={() => {
+          paused[1](false);
+        }}
+      >
         <h1>interested in</h1>
         <Option name="Startups" />
         <Option name="Typography" />
         <Option name="Language Models" />
       </section>
 
-      <section>
+      <section
+        onMouseEnter={() => {
+          paused[1](true);
+          reset[1]([]);
+        }}
+        onMouseLeave={() => {
+          paused[1](false);
+        }}
+      >
         <h1>who knows</h1>
         <Option name="Javascript" />
         <Option name="Typescript" />
@@ -95,7 +113,10 @@ export default function Home() {
 
       <nav
         className="flex flex-row-reverse gap-12 text-lg"
-        onMouseEnter={() => paused[1](true)}
+        onMouseEnter={() => {
+          paused[1](true);
+          reset[1]([]);
+        }}
         onMouseLeave={() => paused[1](false)}
       >
         <Link href="#">Home</Link>

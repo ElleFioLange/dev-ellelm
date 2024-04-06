@@ -10,19 +10,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        light: "rgb(var(--light) / <alpha-value>)",
-        dark: "rgb(var(--dark) / <alpha-value>)",
-        // ===========================================
-        alabaster: "rgb(var(--alabaster) / <alpha-value>)",
-        sage: "rgb(var(--sage) / <alpha-value>)",
-        cave: "rgb(var(--cave) / <alpha-value>)",
-        // ===========================================
-        red: "rgb(var(--red) / <alpha-value>)",
-        // ===========================================
         fg: "rgb(var(--fg) / <alpha-value>)",
         bg: "rgb(var(--bg) / <alpha-value>)",
         // ===========================================
-        accent: "rgb(var(--accent) / <alpha-value>)",
+        accent: {
+          fg: "rgb(var(--accent-fg) / <alpha-value>)",
+          bg: "rgb(var(--accent-bg) / <alpha-value>)",
+        },
+        // ===========================================
+        green: "rgb(var(--green) / <alpha-value>)",
+        red: "rgb(var(--red) / <alpha-value>)",
       },
       fontFamily: {
         cormorant: ["var(--cormorant)"],
