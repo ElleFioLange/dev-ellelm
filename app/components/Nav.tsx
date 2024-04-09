@@ -1,13 +1,15 @@
 import Link from "next/link";
 import { Dispatch } from "react";
 
+// TODO Add to layout position with fixed ?
+
 export default function Nav({
   paused,
   reset,
   className,
 }: {
   paused?: [boolean, Dispatch<boolean>];
-  reset: [never[], Dispatch<never[]>];
+  reset?: [never[], Dispatch<never[]>];
   className: string;
 }) {
   return (
@@ -17,7 +19,7 @@ export default function Nav({
         paused
           ? () => {
               paused[1](true);
-              reset[1]([]);
+              if (reset) reset[1]([]);
             }
           : undefined
       }

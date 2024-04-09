@@ -126,6 +126,22 @@
   .ellelm-grid > p:nth-child(7) {
     grid-area: d;
   }
+
+  .portfolio-grid {
+    @apply grid gap-4;
+    grid-template:
+      ". ." 1fr
+      "a b" 2fr
+      ". ." 1fr / 5fr 4fr;
+  }
+
+  .portfolio-grid > div:nth-child(1) {
+    grid-area: a;
+  }
+
+  .portfolio-grid > div:nth-child(2) {
+    grid-area: b;
+  }
 }
 
 @layer utilities {
