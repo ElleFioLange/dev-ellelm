@@ -25,7 +25,7 @@ const handleExplain = async ({
 
   const response = await fetch("/api/explain", {
     method: "POST",
-    body: JSON.stringify({ selected }),
+    body: JSON.stringify({ keywords: selected }),
   });
 
   prevExplained[1]([...selected]);

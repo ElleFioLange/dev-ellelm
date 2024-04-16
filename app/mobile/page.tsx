@@ -86,7 +86,6 @@ export default function Home() {
         <Option name="Firebase" />
         <Option name="SQL" />
         <Option name="Transformers" />
-        <Option name="Langchain" />
         <Option name="RAG LLMs" />
         <Option name="Vector Databases" />
       </section>

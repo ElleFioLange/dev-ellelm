@@ -7,6 +7,7 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   // blocklist: ["invert"],
+  safelist: ["animate-fade-out"],
   theme: {
     extend: {
       colors: {

@@ -44,6 +44,7 @@ export default function ElleLM({
   return (
     <section className="ellelm-grid overflow-hidden">
       {/* --- Paragraph background --- */}
+      {/* TODO Add fade at bottom of paragraph (attach here with z-20 to anchor to bottom) */}
       <div
         className={
           "transition-all place-self-end w-full duration-[2.5s] ease-in-out bg-accent-bg" +

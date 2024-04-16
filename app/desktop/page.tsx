@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import ElleLM from "./components/ElleLM";
 import { useState } from "react";
 import { State } from "@/utils/types/state";
@@ -19,7 +18,7 @@ export default function Home() {
     return (
       <button
         className={
-          "text-lg pl-1 opacity-1 disabled:opacity-30 bg-bg block w-full transition-all duration-300 ease-in-out text-left" +
+          "text-lg pl-1 opacity-100 disabled:opacity-30 bg-bg block w-full transition-all duration-300 ease-in-out text-left" +
           (isSelected
             ? " text-green cursor-pointer bg-green/10 enabled:hover:text-red enabled:hover:bg-red/10"
             : " enabled:hover:bg-green/10 enabled:hover:text-green")
@@ -88,6 +87,7 @@ export default function Home() {
         <Option name="Javascript" />
         <Option name="Typescript" />
         <Option name="Python" />
+        <Option name="Git" />
         <Option name="CSS" />
         <Option name="Tailwind" />
         <Option name="React" />
@@ -95,7 +95,6 @@ export default function Home() {
         <Option name="Firebase" />
         <Option name="SQL" />
         <Option name="Transformers" />
-        <Option name="Langchain" />
         <Option name="RAG LLMs" />
         <Option name="Vector Databases" />
       </section>

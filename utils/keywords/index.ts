@@ -1,3 +1,4 @@
-import developer from "./developer";
+import contexts from "./contexts";
+import relations from "./relations";
 
-export default { developer };
+export { contexts, relations };
