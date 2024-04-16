@@ -18,6 +18,9 @@ export const metadata: Metadata = {
   description: "Elle Fiorentino-Lange's personal website",
 };
 
+// Mute logs in PROD
+if (process.env.NODE_ENV === "production") console.log = () => {};
+
 export default function RootLayout({
   children,
 }: Readonly<{
