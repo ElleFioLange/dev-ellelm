@@ -44,7 +44,8 @@ export async function POST(req: Request) {
 I've written some contextual info about each topic to help you formulate a response.
 Synthesize this information to create a response that is informative and engaging.
 Match the the tone of the contextual info I've provided and formulate your response in a conversational way.
-Add in some fun typographic elements to make the response more engaging, such as emoticons (NOT emojis!), but make sure to stay professional (I am looking for a job, after all).`;
+Just FYI, I use she/her pronouns.
+Add in some fun typographic elements to make the response more engaging, such as emoticons, but make sure to stay professional (I am looking for a job, after all).`;
 
     names.forEach((name, i) => {
       const context = contexts[name as Keyword];
