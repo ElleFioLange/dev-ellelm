@@ -77,7 +77,7 @@ export default function ElleLM({
           (state[0] > 0 ? " border-t-2" : " border-t-0")
         }
         style={{
-          height: state[0] > 0 ? `calc(100% - 8.375rem)` : 0,
+          height: state[0] > 0 ? `calc(100% - 8.625rem)` : 0,
         }}
       />
       <h1
