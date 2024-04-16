@@ -38,7 +38,7 @@ export default function Home() {
 
   return (
     <main
-      className="animate-fade-in pt-0 w-screen max-w-screen h-screen max-h-screen no-scrollbar overflow-auto"
+      className="animate-fade-in pt-0 w-full max-w-full h-full max-h-full no-scrollbar overflow-auto"
       onScroll={() => reset[1]([])}
     >
       <header className="z-10 fixed w-full px-4 pt-6 left-0 top-0 max-h-screen flex flex-col bg-bg">
@@ -49,7 +49,7 @@ export default function Home() {
         </h2>
         <Nav
           reset={reset}
-          className="z-10 overflow-x-auto shrink-0 relative transition-all duration-500 ease-in-out gap-8 mb-4"
+          className="z-10 overflow-x-auto shrink-0 relative transition-all duration-500 ease-in-out mb-4"
         />
 
         <ElleLM

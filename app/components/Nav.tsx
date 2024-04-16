@@ -10,7 +10,7 @@ export default function Nav({
 }: {
   paused?: [boolean, Dispatch<boolean>];
   reset?: [never[], Dispatch<never[]>];
-  className: string;
+  className?: string;
 }) {
   return (
     <nav

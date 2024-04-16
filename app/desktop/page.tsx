@@ -39,7 +39,7 @@ export default function Home() {
     _handleRemove({ name, selected, reset });
 
   return (
-    <main className="animate-fade-in home-grid gap-1 w-screen h-screen max-w-screen max-h-screen overflow-hidden p-8">
+    <main className="animate-fade-in home-grid gap-1 w-full h-full max-w-full max-h-full overflow-hidden p-8">
       <section
         onMouseEnter={() => {
           if (!paused[0]) {
@@ -113,7 +113,7 @@ export default function Home() {
         </h2>
       </section>
 
-      <Nav paused={paused} reset={reset} className="gap-12 text-lg" />
+      <Nav paused={paused} reset={reset} className="" />
     </main>
   );
 }

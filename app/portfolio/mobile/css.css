@@ -1,0 +1,10 @@
+@tailwind components;
+
+@layer components {
+  .portfolio-grid {
+    grid-template:
+      "." 1.5rem
+      "a" 2fr
+      "b" 3fr;
+  }
+}

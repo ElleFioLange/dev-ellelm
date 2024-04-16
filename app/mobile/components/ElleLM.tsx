@@ -67,13 +67,13 @@ export default function ElleLM({
   return (
     <section
       className={
-        "max-h-full relative overflow-hidden flex flex-col transition-all duration-500 ease-in-out" +
+        "max-h-full w-full relative overflow-hidden flex flex-col transition-all duration-500 ease-in-out" +
         (selected.length ? " -mt-4" : " mt-0")
       }
     >
       <div
         className={
-          "fixed box-content left-0 bottom-0 w-screen transition-all duration-[2.5s] border-fg ease-in-out bg-accent-bg" +
+          "fixed box-content left-0 bottom-0 w-full transition-all duration-[2.5s] border-fg ease-in-out bg-accent-bg" +
           (state[0] > 0 ? " border-t-2" : " border-t-0")
         }
         style={{

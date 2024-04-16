@@ -46,6 +46,16 @@
     @apply text-2xl;
   }
 
+  nav {
+    @apply gap-12 text-lg;
+  }
+
+  @media (max-width: 768px) {
+    nav {
+      @apply gap-4;
+    }
+  }
+
   a:hover {
     @apply underline;
   }
@@ -129,10 +139,6 @@
 
   .portfolio-grid {
     @apply grid gap-4;
-    grid-template:
-      ". ." 1fr
-      "a b" 2fr
-      ". ." 1fr / 5fr 4fr;
   }
 
   .portfolio-grid > div:nth-child(1) {

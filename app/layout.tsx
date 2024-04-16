@@ -28,7 +28,7 @@ export default function RootLayout({
       className={`${cormorant_unicase.className} ${cormorant.variable}`}
       lang="en"
     >
-      <body>{children}</body>
+      <body className="w-full h-full">{children}</body>
     </html>
   );
 }

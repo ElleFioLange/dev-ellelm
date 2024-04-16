@@ -1,0 +1,10 @@
+@tailwind components;
+
+@layer components {
+  .portfolio-grid {
+    grid-template:
+      ". ." 1fr
+      "a b" 2fr
+      ". ." 1fr / 5fr 4fr;
+  }
+}
