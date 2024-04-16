@@ -2,7 +2,7 @@
 
 ## Hi!
 
-This is my personal portfolio website. It's built with Next.JS since I find it super easy to use and it conveniently has a built-in pattern for server API routes for keeping back-end API logic off-client.
+This is my personal portfolio website. It's built with Next.JS since I find it super easy to use and it conveniently has a built-in pattern for server API routes for keeping back-end API logic off-client, as well as a middleware feature that's useful for delivering different versions of pages to desktop and mobile clients.
 
 I have made the repo for my website public so that my code can be inspectable (and hopefully impress any potential employers :)
 

@@ -200,7 +200,7 @@ export default function ElleLM({
         <button
           className={
             "w-full block shrink-0 absolute bg-bg border border-b-2 border-fg bottom-0 text-center transition-all duration-300 ease-in-out" +
-            (selState[0] === 2 ? " h-12 c-invert" : " h-6")
+            (selState[0] === 2 ? " h-12 invert-theme" : " h-6")
           }
           onClick={(e) => {
             e.stopPropagation();
@@ -245,7 +245,7 @@ export default function ElleLM({
           else handleReturn();
         }}
         className={
-          "w-full py-2 c-invert fixed bottom-0 left-0 transition-all duration-500 text-4xl text-center" +
+          "w-full py-2 invert-theme fixed bottom-0 left-0 transition-all duration-500 text-4xl text-center" +
           ((state[0] > 0 && state[0] < 4) || matchesPrev
             ? " opacity-1 translate-y-0"
             : " opacity-0 translate-y-8")

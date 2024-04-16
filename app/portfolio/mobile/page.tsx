@@ -8,7 +8,7 @@ export default function Portfolio() {
   return (
     <main className="animate-fade-in overflow-x-hidden overflow-y-auto w-full h-full">
       {items.map(({ name, date, description, videoSrc }) => (
-        <section className="w-full h-full portfolio-grid p-4">
+        <section className="w-full h-full portfolio-grid p-4" key={name}>
           <div className="place-self-start p-4 bg-accent-fg w-full h-full text-bg">
             <h1>{name}</h1>
             <h3 className="italic">{date}</h3>

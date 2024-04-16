@@ -177,7 +177,7 @@
     }
   }
 
-  .c-invert {
+  .invert-theme {
     @apply bg-fg text-bg;
   }
 }
