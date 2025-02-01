@@ -28,6 +28,9 @@ const handleExplain = async ({
     body: JSON.stringify({ keywords: selected }),
   });
 
+  // Looking at this months later and I am shocked that there's no error handling here?
+  // Perhaps it is being handled some other way... too busy to check currently but will note
+
   prevExplained[1]([...selected]);
   state[1](1); // Streaming
 
