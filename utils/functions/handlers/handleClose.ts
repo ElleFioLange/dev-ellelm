@@ -13,7 +13,6 @@ export default function handleClose({
   selState?: [0 | 1 | 2, Dispatch<0 | 1 | 2>];
 }) {
   ref.current?.classList.toggle("animate-fade-out");
-  console.log(ref.current?.classList);
   state[1](4); // Closing
   reset[1]([]);
   setTimeout(() => {

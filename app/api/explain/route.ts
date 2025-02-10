@@ -71,9 +71,6 @@ You can use emojis sparingly, but make sure to stay professional (I am looking f
       });
     }
 
-    console.log(system);
-    console.log(`${keywords.join("\n")}`);
-
     const response = await anthropic.messages.create({
       system,
       messages: [
