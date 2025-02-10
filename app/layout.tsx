@@ -14,8 +14,8 @@ const cormorant_unicase = Cormorant_Unicase({
 });
 
 export const metadata: Metadata = {
-  title: "ElleLM",
-  description: "Elle Fiorentino-Lange's personal website",
+  title: "Elle",
+  description: "Dev - Elle Fiorentino-Lange",
 };
 
 // Mute logs in PROD
