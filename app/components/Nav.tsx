@@ -28,7 +28,7 @@ export default function Nav({
       <Link href="/">Home</Link>
       <Link href="/contact">Contact</Link>
       <Link href="/portfolio">Portfolio</Link>
-      <Link href="https://github.com/ElleFioLange/ellelm">GitHub</Link>
+      <Link href="https://github.com/ElleFioLange/dev-ellelm">GitHub</Link>
       {/* <Link href="/blog">Blog</Link> */}
     </nav>
   );
