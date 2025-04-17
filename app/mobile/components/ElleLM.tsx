@@ -201,17 +201,19 @@ export default function ElleLM({
         </div>
 
         <div className="w-full h-min shrink-0 absolute bottom-0 transition-all duration-300 ease-in-out">
-          {/* <button
+          <button
             className={
-              "w-full block shrink-0 bg-red text-center text-lg overflow-hidden mb-2 text-bg transition-all duration-300 ease-in-out" +
-              (selState[0] === 2 ? " h-12" : " h-0")
+              "w-full block shrink-0 bg-red text-center overflow-hidden mb-2 text-bg transition-all duration-300 ease-in-out" +
+              (selState[0] === 2 ? " h-8" : " h-0")
             }
             onClick={(e) => {
               e.stopPropagation();
+              handleRemove(selected);
+              closePreview(0);
             }}
           >
             Clear
-          </button> */}
+          </button>
           <button
             className={
               "w-full block shrink-0  border border-b-2 border-fg bottom-0 text-center transition-all duration-300 ease-in-out" +
