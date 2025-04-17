@@ -30,6 +30,7 @@ export default function ElleLM({
   const prevExplained = useState<string[]>([]);
 
   const ref = useRef<HTMLParagraphElement>(null);
+  const selectedRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (selected.length) {
@@ -63,6 +64,11 @@ export default function ElleLM({
   const handleClose = () => _handleClose({ ref, state, reset, selState });
 
   const handleReturn = () => _handleReturn({ state, ref, text, selState });
+
+  const closePreview = (to: 0 | 1) => {
+    selState[1](to);
+    selectedRef.current?.parentElement?.scrollTo({ top: 0 });
+  };
 
   return (
     <section
@@ -122,7 +128,7 @@ export default function ElleLM({
       >
         <div className="w-full overflow-y-auto overflow-x-hidden grow">
           <div
-            id="selection-container"
+            ref={selectedRef}
             className="white-space-nowrap width-full flex gap-2"
             style={{
               height: selState[0] === 2 ? `${selected.length + 12}rem` : "",
@@ -147,9 +153,7 @@ export default function ElleLM({
 
                   // Account for width of removed elements
                   let p = 0;
-                  const container = document.getElementById(
-                    "selection-container"
-                  );
+                  const container = selectedRef.current;
                   const children = container?.children;
                   if (children && children?.length !== selected.length) {
                     const [{ c, _i }] = Array.from(children)
@@ -216,7 +220,7 @@ export default function ElleLM({
             onClick={(e) => {
               e.stopPropagation();
               if (selState[0] === 2) {
-                selState[1](1);
+                closePreview(1);
                 reset[1]([]);
               } else selState[1](2);
             }}
