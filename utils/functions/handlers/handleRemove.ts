@@ -1,14 +1,14 @@
 import { Dispatch } from "react";
 
 export default function handleRemove({
-  name,
+  names,
   selected,
   reset,
 }: {
-  name: string;
+  names: string[];
   selected: [string[], Dispatch<string[]>];
   reset: [never[], Dispatch<never[]>];
 }) {
-  selected[1](selected[0].filter((option) => option !== name));
+  selected[1](selected[0].filter((option) => !names.includes(option)));
   reset[1]([]);
 }

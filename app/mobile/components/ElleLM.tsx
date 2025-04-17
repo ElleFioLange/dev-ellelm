@@ -13,7 +13,7 @@ export default function ElleLM({
   state,
 }: {
   selected: Array<string>;
-  handleRemove: (name: string) => void;
+  handleRemove: (names: string[]) => void;
   // Used to reset the Loading component
   reset: [never[], Dispatch<never[]>];
   state: [State, Dispatch<State>];
@@ -176,7 +176,7 @@ export default function ElleLM({
                     transform: `translate(${left}, ${top})`,
                   }}
                   onClick={() =>
-                    selState[0] === 2 ? handleRemove(name) : selState[1](2)
+                    selState[0] === 2 ? handleRemove([name]) : selState[1](2)
                   }
                   className="inline-block text-2xl cursor-pointer whitespace-nowrap transition-all ease-in-out duration-500"
                   // onClick={() => handleChange({ change: "remove", name })}
@@ -196,31 +196,43 @@ export default function ElleLM({
           </div>
         </div>
 
-        {/* TODO Add clear button */}
-        <button
-          className={
-            "w-full block shrink-0 absolute bg-bg border border-b-2 border-fg bottom-0 text-center transition-all duration-300 ease-in-out" +
-            (selState[0] === 2 ? " h-12 invert-theme" : " h-6")
-          }
-          onClick={(e) => {
-            e.stopPropagation();
-            if (selState[0] === 2) {
-              selState[1](1);
-              reset[1]([]);
-            } else selState[1](2);
-          }}
-        >
-          <span
+        <div className="w-full h-min shrink-0 absolute bottom-0 transition-all duration-300 ease-in-out">
+          {/* <button
             className={
-              "transition-all duration-300 ease-in-out inline-block" +
-              (selState[0] === 2
-                ? " rotate-180 scale-[200%] font-bold"
-                : " rotate-0 scale-100 font-normal")
+              "w-full block shrink-0 bg-red text-center text-lg overflow-hidden mb-2 text-bg transition-all duration-300 ease-in-out" +
+              (selState[0] === 2 ? " h-12" : " h-0")
             }
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
           >
-            V
-          </span>
-        </button>
+            Clear
+          </button> */}
+          <button
+            className={
+              "w-full block shrink-0  border border-b-2 border-fg bottom-0 text-center transition-all duration-300 ease-in-out" +
+              (selState[0] === 2 ? " h-12 invert-theme" : " h-6")
+            }
+            onClick={(e) => {
+              e.stopPropagation();
+              if (selState[0] === 2) {
+                selState[1](1);
+                reset[1]([]);
+              } else selState[1](2);
+            }}
+          >
+            <span
+              className={
+                "transition-all duration-300 ease-in-out inline-block" +
+                (selState[0] === 2
+                  ? " rotate-180 scale-[200%] font-bold"
+                  : " rotate-0 scale-100 font-normal")
+              }
+            >
+              V
+            </span>
+          </button>
+        </div>
 
         <span
           className={

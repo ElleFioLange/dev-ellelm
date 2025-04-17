@@ -14,7 +14,7 @@ export default function ElleLM({
   paused,
 }: {
   selected: Array<string>;
-  handleRemove: (name: string) => void;
+  handleRemove: (names: string[]) => void;
   reset: [never[], Dispatch<never[]>];
   state: [State, Dispatch<State>];
   paused: [boolean, Dispatch<boolean>];
@@ -105,7 +105,7 @@ export default function ElleLM({
               "text-lg opacity-1 disabled:opacity-30 pl-1 pr-2 w-full text-left cursor-pointer transition-all duration-150 ease-in-out block enabled:hover:text-red enabled:hover:bg-red/10"
             }
             onClick={() => {
-              handleRemove(name);
+              handleRemove([name]);
               paused[1](false);
             }}
             disabled={state[0] > 0}
@@ -115,6 +115,20 @@ export default function ElleLM({
             {name}
           </button>
         ))}
+        {selected.length > 0 && (
+          <button
+            onClick={() => {
+              handleRemove(selected);
+              paused[1](false);
+            }}
+            disabled={state[0] > 0}
+            onMouseEnter={() => paused[1](true)}
+            onMouseLeave={() => paused[1](false)}
+            className="text-red text-lg opacity-1 disabled:opacity-30 pl-1 pr-2 w-full text-left cursor-pointer transition-all duration-150 ease-in-out block enabled:hover:bg-red/10"
+          >
+            Clear
+          </button>
+        )}
       </div>
 
       <p

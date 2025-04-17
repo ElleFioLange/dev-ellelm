@@ -23,7 +23,7 @@ export default function Home() {
           (isSelected ? " text-green bg-green/10" : "")
         }
         onClick={() => {
-          if (isSelected) handleRemove(name);
+          if (isSelected) handleRemove([name]);
           else selected[1]([...selected[0], name]);
           reset[1]([]);
         }}
@@ -33,8 +33,8 @@ export default function Home() {
     );
   };
 
-  const handleRemove = (name: string) =>
-    _handleRemove({ name, selected, reset });
+  const handleRemove = (names: string[]) =>
+    _handleRemove({ names, selected, reset });
 
   return (
     <main

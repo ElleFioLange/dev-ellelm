@@ -24,7 +24,7 @@ export default function Home() {
             : " enabled:hover:bg-green/10 enabled:hover:text-green")
         }
         onClick={() => {
-          if (isSelected) handleRemove(name);
+          if (isSelected) handleRemove([name]);
           else selected[1]([...selected[0], name]);
           reset[1]([]);
         }}
@@ -35,8 +35,8 @@ export default function Home() {
     );
   };
 
-  const handleRemove = (name: string) =>
-    _handleRemove({ name, selected, reset });
+  const handleRemove = (names: string[]) =>
+    _handleRemove({ names, selected, reset });
 
   return (
     <main className="animate-fade-in home-grid gap-1 w-full h-full max-w-full max-h-full overflow-hidden p-8">
