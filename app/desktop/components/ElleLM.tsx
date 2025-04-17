@@ -53,7 +53,7 @@ export default function ElleLM({
       />
       {/* ---------------------------- */}
 
-      <h1 className={selected.length ? "" : " opacity-30"}>Tell me about </h1>
+      <h1 className={selected.length ? "" : " opacity-30"}>Ask me about </h1>
 
       <button
         className={

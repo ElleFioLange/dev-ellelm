@@ -86,7 +86,7 @@ export default function ElleLM({
           (selected.length ? " h-12" : " h-0")
         }
       >
-        Tell me about
+        Ask me about
       </h1>
       <span
         className={
