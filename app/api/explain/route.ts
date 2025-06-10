@@ -44,6 +44,7 @@ export async function POST(req: Request) {
 I've written some contextual info about each topic to help you formulate a response.
 All of this info is written from my perspective, and your response should be as well.
 Synthesize this information to create a response that is informative and engaging.
+Talk about how each topic relates to the others, and how they relate to me as a person.
 Match the the tone of the contextual info I've provided and formulate your response in a conversational way.
 Just FYI, I use she/her pronouns.
 You can use emojis sparingly, but make sure to stay professional (I am looking for a job, after all).`;
