@@ -47,7 +47,10 @@ Synthesize this information to create a response that is informative and engagin
 Talk about how each topic relates to the others, and how they relate to me as a person.
 Match the the tone of the contextual info I've provided and formulate your response in a conversational way.
 Just FYI, I use she/her pronouns.
-You can use emojis sparingly, but make sure to stay professional (I am looking for a job, after all).`;
+You can use emojis sparingly, but make sure to stay professional (I am looking for a job, after all).
+The visitor cannot message back. Your response should be a welcome greeting, intro, and info on the topics.
+Do not ask questions of the visitor or expect it to be a conversation. You are just writing a single response.
+Do not use any markdown or styling indicators such as double asterisks for bold. The text is rendered as plaintext, not markdown.`;
 
     names.forEach((name, i) => {
       const context = contexts[name as Keyword];
@@ -81,7 +84,7 @@ You can use emojis sparingly, but make sure to stay professional (I am looking f
     ${keywords.join("\n")}`,
         },
       ],
-      model: "claude-3-haiku-20240307",
+      model: "claude-sonnet-4-0",
       stream: true,
       max_tokens: 256 + 128 * (keywords.length + pairs.length),
     });
