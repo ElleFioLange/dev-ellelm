@@ -84,7 +84,7 @@ Do not use any markdown or styling indicators such as double asterisks for bold.
     ${keywords.join("\n")}`,
         },
       ],
-      model: "claude-sonnet-4-0",
+      model: "claude-sonnet-4-5",
       stream: true,
       max_tokens: 256 + 128 * (keywords.length + pairs.length),
     });
