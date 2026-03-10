@@ -3,6 +3,7 @@ import contexts from "@/utils/keywords/contexts";
 import relations from "@/utils/keywords/relations";
 import Anthropic from "@anthropic-ai/sdk";
 import { Keyword } from "@/utils/types/keywords";
+import { getLatestSonnetModel } from "@/utils/functions/getLatestSonnetModel";
 
 export const runtime = "edge";
 
@@ -75,6 +76,8 @@ Do not use any markdown or styling indicators such as double asterisks for bold.
       });
     }
 
+    const model = await getLatestSonnetModel(anthropic);
+
     const response = await anthropic.messages.create({
       system,
       messages: [
@@ -84,12 +87,13 @@ Do not use any markdown or styling indicators such as double asterisks for bold.
     ${keywords.join("\n")}`,
         },
       ],
-      model: "claude-sonnet-4-5",
+      model,
       stream: true,
       max_tokens: 256 + 128 * (keywords.length + pairs.length),
     });
 
-    const stream = AnthropicStream(response);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const stream = AnthropicStream(response as any);
 
     return new StreamingTextResponse(stream, { status: 200 });
   } catch (e) {
