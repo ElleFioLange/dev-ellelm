@@ -1,4 +1,5 @@
-import { AnthropicStream, StreamingTextResponse } from "ai";
+import { anthropic as createAnthropic } from "@ai-sdk/anthropic";
+import { streamText } from "ai";
 import contexts from "@/utils/keywords/contexts";
 import relations from "@/utils/keywords/relations";
 import Anthropic from "@anthropic-ai/sdk";
@@ -7,7 +8,7 @@ import { getLatestSonnetModel } from "@/utils/functions/getLatestSonnetModel";
 
 export const runtime = "edge";
 
-const anthropic = new Anthropic({
+const anthropicClient = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
@@ -25,7 +26,7 @@ export async function POST(req: Request) {
     const names = keywords.map(
       (item) =>
         // Lowercase here instead of pre-call to preserve casing when writing prompt
-        item.toLowerCase() as string
+        item.toLowerCase() as string,
     );
 
     // Get pairs that match relation contexts
@@ -76,26 +77,17 @@ Do not use any markdown or styling indicators such as double asterisks for bold.
       });
     }
 
-    const model = await getLatestSonnetModel(anthropic);
+    const modelId = await getLatestSonnetModel(anthropicClient);
 
-    const response = await anthropic.messages.create({
+    const result = streamText({
+      model: createAnthropic(modelId),
       system,
-      messages: [
-        {
-          role: "user",
-          content: `Hi! Can you tell me a bit about these topics?
-    ${keywords.join("\n")}`,
-        },
-      ],
-      model,
-      stream: true,
-      max_tokens: 256 + 128 * (keywords.length + pairs.length),
+      prompt: `Hi! Can you tell me a bit about these topics?
+${keywords.join("\n")}`,
+      maxOutputTokens: 256 + 128 * (keywords.length + pairs.length),
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const stream = AnthropicStream(response as any);
-
-    return new StreamingTextResponse(stream, { status: 200 });
+    return result.toTextStreamResponse();
   } catch (e) {
     return Response.json(e, { status: 500 });
   }

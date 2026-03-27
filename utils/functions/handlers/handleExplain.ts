@@ -44,33 +44,15 @@ const handleExplain = async ({
   while (true) {
     const { done, value } = await _reader.read();
     if (done) break;
-    const chunk = new TextDecoder().decode(value);
 
-    // Parse the stream format: "0:\"text\"" -> "text"
-    // Split by newlines in case multiple chunks arrive together
-    const lines = chunk.split("\n").filter((line) => line.trim());
+    // Modern AI SDK returns clean text chunks - no parsing needed
+    const _text = new TextDecoder().decode(value);
 
-    for (const line of lines) {
-      // Remove the prefix (e.g., "0:") and parse the JSON string
-      const colonIndex = line.indexOf(":");
-      if (colonIndex === -1) continue;
-
-      const jsonText = line.substring(colonIndex + 1);
-      if (!jsonText) continue;
-
-      try {
-        // Parse the JSON-encoded string to get the actual text
-        const _text = JSON.parse(jsonText);
-        const add = document.createElement("span");
-        add.innerText = _text;
-        add.className = "animate-fade-in";
-        ref.current?.appendChild(add);
-        result += _text;
-      } catch {
-        // If parsing fails, skip this chunk
-        continue;
-      }
-    }
+    const add = document.createElement("span");
+    add.innerText = _text;
+    add.className = "animate-fade-in";
+    ref.current?.appendChild(add);
+    result += _text;
   }
 
   text[1](result);

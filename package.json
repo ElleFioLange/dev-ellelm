@@ -9,12 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^3.0.64",
     "@anthropic-ai/sdk": "^0.80.0",
     "@gsap/react": "^2.1.0",
     "@mdx-js/loader": "^3.0.1",
     "@mdx-js/react": "^3.0.1",
     "@next/mdx": "^14.1.4",
-    "ai": "^3.0.13",
+    "ai": "^6.0.140",
     "gsap": "^3.12.5",
     "next": "14.2.35",
     "react": "^18",

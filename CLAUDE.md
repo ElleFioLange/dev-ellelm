@@ -24,8 +24,10 @@ pnpm lint       # ESLint via Next.js
 1. User selects keywords from the home page options
 2. `Loading.tsx` runs a GSAP animation; after the animation completes, it fires `onLoad`
 3. `handleExplain.ts` POSTs selected keywords to `/api/explain`
-4. The API route (`app/api/explain/route.ts`, edge runtime) builds a system prompt from per-keyword contexts (`utils/keywords/contexts/`) and relationship contexts (`utils/keywords/relations/`), then calls `claude-sonnet-4-5` with streaming
-5. The client reads the stream in chunks and appends `<span>` elements with `animate-fade-in` to a `<p ref>` for real-time display
+4. The API route (`app/api/explain/route.ts`, edge runtime) builds a system prompt from per-keyword contexts (`utils/keywords/contexts/`) and relationship contexts (`utils/keywords/relations/`), then uses the modern Vercel AI SDK (`@ai-sdk/anthropic` v3.0.64, `ai` v6.0.140) with `streamText()` to stream Claude responses
+5. The client reads the clean text stream chunks and appends `<span>` elements with `animate-fade-in` to a `<p ref>` for real-time display
+
+**Streaming Implementation**: Uses `streamText()` with the `@ai-sdk/anthropic` provider and `toTextStreamResponse()` for clean, properly-formatted text streaming (no legacy `AnthropicStream` formatting)
 
 ### State Machine (`utils/types/state.ts`)
 
@@ -51,7 +53,7 @@ Handlers receive state tuples (`[value, setter]`) as arguments rather than using
 - `contexts/` — one file per keyword, each exports a string used to build the Claude system prompt
 - `relations/` — files for specific keyword pairs (e.g., `firebase_python`); keys are `a_b` (alphabetical)
 - `contexts/index.ts` and `relations/index.ts` barrel-export everything
-- Keywords are sorted alphabetically before building the prompt; max tokens = `256 + 128 * (keywords + pairs)`
+- Keywords are sorted alphabetically before building the prompt; `maxOutputTokens` = `256 + 128 * (keywords + pairs)`
 
 ### Styling
 
