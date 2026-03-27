@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm update @anthropic-ai/sdk 2>&1)",
+      "Bash(pnpm build 2>&1)"
+    ]
+  }
+}
