@@ -8,9 +8,9 @@ import { getLatestSonnetModel } from "@/utils/functions/getLatestSonnetModel";
 
 export const runtime = "edge";
 
-const anthropicClient = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+// const anthropicClient = new Anthropic({
+//   apiKey: process.env.ANTHROPIC_API_KEY,
+// });
 
 export type Req = {
   keywords: string[];
@@ -77,10 +77,10 @@ Do not use any markdown or styling indicators such as double asterisks for bold.
       });
     }
 
-    const modelId = await getLatestSonnetModel(anthropicClient);
+    // const modelId = await getLatestSonnetModel(anthropicClient);
 
     const result = streamText({
-      model: createAnthropic(modelId),
+      model: createAnthropic("claude-sonnet-4-6"),
       system,
       prompt: `Hi! Can you tell me a bit about these topics?
 ${keywords.join("\n")}`,
