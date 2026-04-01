@@ -1,5 +1,12 @@
 export default [
   {
+    name: "Black Math",
+    date: "Jun - Nov 2025",
+    description:
+      "I used AI coding tools to create a management system for our AI intiative at Black Math. Starting with a dataset of challenges and opportunities for AI, I created a web app that allows us to update that information through serially ranking two datapoints against each other on 3 axes: impact, complexity, and AI benefit. The system uses the Chess ELO ranking system to take this feedback and update the positional relationships of the data points. It also provides tools for users to weight different forms of expertise in order to sculpt a view of the dataset from different perspectives.",
+    videoSrc: "https://www.youtube.com/embed/jTAty--1K3g",
+  },
+  {
     name: "Basil",
     date: "Jan - Mar 2024",
     description:
