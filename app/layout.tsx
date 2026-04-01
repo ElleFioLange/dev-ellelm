@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Unicase, Cormorant } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./css.css";
 
 const cormorant = Cormorant({
@@ -31,7 +32,10 @@ export default function RootLayout({
       className={`${cormorant_unicase.className} ${cormorant.variable}`}
       lang="en"
     >
-      <body className="w-full h-full">{children}</body>
+      <body className="w-full h-full">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
